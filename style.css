@@ -1,0 +1,73 @@
+html{
+    font-size: 20px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+body{
+    height: 100dvh;
+    margin: 0;
+    display: grid;
+    grid-template-rows: 90px 1fr 360px;
+    grid-template-columns: 100%;
+}
+
+header{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: hsl(0, 0%, 0%);
+    color: hsl(0, 0%, 100%);
+    margin: 0;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    box-shadow: 0px 0px 80px 15px rgba(0, 0, 0);
+    border-bottom: 2px solid hsl(0, 0%, 100%);
+}
+
+main{
+    padding: 100px;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 90px 300px 300px;
+    grid-template-areas: 
+        "pos-0 pos-0 pos-0 pos-0 pos-0"
+        "pos-1 pos-2 pos-3 pos-4 pos-5"
+        "pos-6 pos-6 pos-6 pos-6 pos-6";
+}
+
+.escalonador{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    border: 2px solid hsl(0, 0%, 0%);
+}
+
+.preemptivo{
+    background-color: hsla(0, 100%, 50%, 0.2);
+    border: 2px solid hsl(0, 100%, 50%);
+}
+
+
+
+footer{
+    color: hsl(0, 0%, 100%);
+    background-color: hsl(0, 0%, 0%);
+    display: grid;
+    grid-template-columns: 1f 1f 1f;
+    grid-template-rows: 100%;
+    grid-auto-flow: column;
+    padding: 20px;
+    gap: 20px;
+    box-shadow: 0px 0px 80px 15px rgba(0, 0, 0);
+    border-top: 2px solid hsl(0, 0%, 100%);
+}
+
+footer a {
+    color: rgb(167, 255, 252);
+}
