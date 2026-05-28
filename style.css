@@ -1,3 +1,13 @@
+:root{
+    --cor-base: hsl(0, 0%, 0%);
+    --cor-corpo: hsl(0, 0%, 100%);
+    --cor-destaque: hsl(0, 100%, 50%);
+
+    --cor-texto: hsl(from var(--cor-base) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100)); 
+    --cor-texto-corpo: hsl(from var(--cor-corpo) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100)); 
+    --cor-link: hsl(from var(--cor-base) clamp(180, (l - 60) * 1000, 235) 100 50);
+}
+
 html{
     font-size: 20px;
     font-family: "Plus Jakarta Sans", sans-serif;
@@ -9,22 +19,31 @@ body{
     display: grid;
     grid-template-rows: 90px 1fr 360px;
     grid-template-columns: 100%;
+    background-color: hsl(from var(--cor-corpo) h s l / .7);
 }
 
 header{
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: hsl(0, 0%, 0%);
-    color: hsl(0, 0%, 100%);
+    background-color: var(--cor-base);
+    color: var(--cor-texto);
     margin: 0;
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: center;
     justify-items: center;
-    box-shadow: 0px 0px 80px 15px rgba(0, 0, 0);
-    border-bottom: 2px solid hsl(0, 0%, 100%);
+    box-shadow: 0px 0px 80px 15px var(--cor-base);
+    border-bottom: 2px solid hsl(from var(--cor-texto) h s l / .7);
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+}
+
+header a{
+    color: var(--cor-texto);
+    text-decoration: none;
 }
 
 main{
@@ -39,35 +58,59 @@ main{
         "pos-6 pos-6 pos-6 pos-6 pos-6";
 }
 
-.escalonador{
+.escolha{
     display: flex;
     flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.2);
     justify-content: center;
     align-items: center;
-    border: 2px solid hsl(0, 0%, 0%);
+    font-size: inherit;
+    font-family: inherit;
+    transition: transform 0.2s ease;
+    text-decoration: none;
+    background-color: hsla(from var(--cor-base) h l s / 0.2);
+    color: var(--cor-texto-corpo);
+    border: 2px solid var(--cor-base);
 }
 
 .preemptivo{
-    background-color: hsla(0, 100%, 50%, 0.2);
-    border: 2px solid hsl(0, 100%, 50%);
+    background-color: hsla(from var(--cor-destaque) h s l / 0.2);
+    border: 2px solid var(--cor-destaque);
 }
 
+a.escolha:hover{
+    background-color: hsla(from var(--cor-destaque) h s l / 0.4);
+    box-shadow: 0px 0px 100px 1px hsla(from var(--cor-destaque) h s l / 0.4);
+    transform: scale(1.05);
+}
+    
+main.escalonador{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-rows: auto;
+    grid-template-areas: none;
+}
 
+.conteudo{
+    margin: 0;
+    padding: 1rem;
+    background-color: hsla(from var(--cor-base) h l s / 0.2);
+    color: var(--cor-texto-corpo);
+    border: 2px solid var(--cor-base);
+}
 
 footer{
-    color: hsl(0, 0%, 100%);
-    background-color: hsl(0, 0%, 0%);
+    color: var(--cor-texto);
+    background-color: var(--cor-base);
     display: grid;
     grid-template-columns: 1f 1f 1f;
     grid-template-rows: 100%;
     grid-auto-flow: column;
     padding: 20px;
     gap: 20px;
-    box-shadow: 0px 0px 80px 15px rgba(0, 0, 0);
-    border-top: 2px solid hsl(0, 0%, 100%);
+    box-shadow: 0px 0px 80px 15px var(--cor-base);
+    border-top: 2px solid hsl(from var(--cor-texto) h s l / .7);
 }
 
 footer a {
-    color: rgb(167, 255, 252);
+    color: var(--cor-link);
 }
