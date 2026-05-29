@@ -16,8 +16,8 @@
     </header>
     <main class="escalonador">
         <div class="conteudo explicacao">
-            <h3>Prioridade</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem aperiam iusto non illum laboriosam voluptatum magni iste sapiente laborum vel delectus odit veritatis, hic eaque at optio dignissimos cupiditate dolorem? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Exercitationem delectus voluptas iusto minima quia sunt ullam reprehenderit nisi aperiam perspiciatis est reiciendis neque necessitatibus nobis accusamus, tempora animi corrupti tempore. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum, quas provident. Reiciendis possimus blanditiis debitis, praesentium vitae provident. Dicta, veritatis! Consectetur totam, ab impedit quidem vel quas laborum atque vero!</p>
+            <h3>Escalonamento por Prioridade</h3>
+            <p>Neste modelo, cada processo recebe uma "nota" ou nível de prioridade (que pode ser baseada na importância do usuário, no uso de memória ou na necessidade de hardware), e o processador sempre escolhe a tarefa com a maior nota da fila. Como se trata de uma versão não preemptiva, o processo escolhido roda até o final, mesmo que um novo processo com prioridade ainda maior apareça no meio do caminho. É um algoritmo excelente para garantir que tarefas críticas do sistema não fiquem esperando, mas possui o risco crônico de deixar processos de baixa prioridade esquecidos para sempre na fila. Para resolver isso, sistemas reais costumam usar uma técnica chamada Aging (Envelhecimento), que aumenta gradativamente a prioridade de processos antigos. É muito aplicado em sistemas embarcados e no gerenciamento de tarefas críticas de hardware.</p>
         </div>
         <div class="conteudo config">
             <h3>Configuração do Escalonador</h3>

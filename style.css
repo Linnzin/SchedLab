@@ -96,6 +96,8 @@ main.escalonador{
     background-color: hsla(from var(--cor-base) h l s / 0.2);
     color: var(--cor-texto-corpo);
     border: 2px solid var(--cor-base);
+    text-align: justify;
+    justify-items: center;
 }
 
 footer{
