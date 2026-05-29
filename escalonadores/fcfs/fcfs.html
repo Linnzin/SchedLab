@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDF</title>
+    <title>FCFS</title>
     <link rel="stylesheet" href="/style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,8 +16,8 @@
     </header>
     <main class="escalonador">
         <div class="conteudo explicacao">
-            <h3>EDF – Earliest Deadline First</h3>
-            <p>O EDF é um algoritmo dinâmico e o "padrão ouro" para Sistemas de Tempo Real (como sistemas de freios ABS, controle de tráfego aéreo ou robótica industrial). Ele funciona com base em prazos finais (deadlines): a cada novo evento, o escalonador avalia qual processo tem o prazo de entrega mais próximo e dá a ele o controle total do processador. Por ser preemptivo, se um novo processo chegar com um prazo de entrega ainda mais urgente do que o processo que está rodando agora, o atual é interrompido imediatamente para ceder o lugar. O EDF é matematicamente ótimo, o que significa que se for possível atender a todos os prazos de um sistema, o EDF conseguirá fazer isso. Sua desvantagem ocorre em cenários de sobrecarga, onde ele pode falhar em cascata em múltiplos prazos. É aplicado estritamente em sistemas onde o atraso de um milissegundo pode causar falhas catastróficas.</p>
+            <h3>FIFO / FCFS – First Come, First Served</h3>
+            <p>Este algoritmo funciona como uma fila de banco tradicional: o primeiro processo que chega é o primeiro a ser executado, e ele roda até o fim sem ser interrompido. Por ser extremamente simples de implementar (utilizando uma estrutura de fila linear), ele consome pouquíssimo processamento do próprio sistema operacional. No entanto, sua grande desvantagem é o chamado "Efeito Comboio" (Convoy Effect), onde processos pequenos e rápidos ficam travados esperando um processo gigante terminar. Devido a essa falta de agilidade, o FIFO raramente é usado sozinho em sistemas modernos, sendo mais comum como parte de engrenagens internas de outros escalonadores, em sistemas de processamento em lote (batch) muito antigos ou em tarefas simples de impressão.</p>
         </div>
         <div class="conteudo config">
             <h3>Configuração do Escalonador</h3>
@@ -54,6 +54,6 @@
             <a href="https://github.com/DasGestirn">Guilherme Xavier</a>
         </div>
     </footer>
-    <script src="/index.js"></script>
+    <script src="/escalonadores/fcfs/fcfs.js"></script>
 </body>
 </html>
