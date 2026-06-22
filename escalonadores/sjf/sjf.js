@@ -19,53 +19,80 @@ function lerParametros(){
     */
 }
 
-function sjf(arrayProcessos){
-
-   let processosRestantes = arrayProcessos.map(p => [p[0], p[1], p[2] ?? 0]);
-   let ganttCoordenadas = [];
-   let tempoAtual = 0;
-
-   while (processosRestantes.length > 0) {
-        // Filtrar os processos que já chegaram até o tempo atual
-        let processosDisponiveis = processosRestantes.filter(p => p[2] <= tempoAtual);
+function sjf(arrayProcessos) {
+    
+    // Formato esperado para cada um dos processos: [PID, Chegada, Execução, Deadline, Prioridade]
+    let processosRestantes = arrayProcessos.map(p => ({
+        pid: p[0],
+        chegada: p[1] ?? 0,
+        execucao: p[2] ?? 0,
+        deadline: p[3] ?? Infinity,
+        prioridade: p[4] ?? 0
+    }));
+    
+    let tabelaFinal = [];      // Armazena as linhas da tabela calculadas
+    let ganttCoordenadas = []; // Armazena os blocos do gráfico: [PID, Inicio, Fim]
+    let tempoAtual = 0;
+    
+    while (processosRestantes.length > 0) {
+    
+        let disponiveis = processosRestantes.filter(p => p.chegada <= tempoAtual);
         
-        // Se nenhum processo chegou ainda, o CPU fica ocioso (Gargalo de ociosidade)
-        if (processosDisponiveis.length === 0) {
-            // Avançamos o tempo atual diretamente para o tempo de chegada do próximo processo mais próximo
-            let proximaChegada = Math.min(...processosRestantes.map(p => p[2]));
+        if (disponiveis.length === 0) {
+            let proximaChegada = Math.min(...processosRestantes.map(p => p.chegada));
+            // Calcula a ociosidade 
+            ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada]);
             tempoAtual = proximaChegada;
-            continue; // Reinicia o loop com o tempo atualizado
+            continue;
         }
         
-        // Escolher o processo com o MENOR tempo de execução (SJF)
-        // Em caso de empate na execução, critério de desempate: quem chegou primeiro (FCFS)
-        processosDisponiveis.sort((a, b) => {
-            if (a[1] !== b[1]) {
-                return a[1] - b[1]; // Menor duração primeiro
+        ///// IMPLEMENTAÇÃO DO SJF
+
+        // Inicialmente irá fazer o SJF clássico.
+        // Mas se houver empate, irá usar FCFS para desempatar
+
+        disponiveis.sort((a, b) => {
+            if (a.execucao !== b.execucao) {
+                return a.execucao - b.execucao;
             }
-            return a[2] - b[2]; // Menor tempo de chegada em caso de empate
+            return a.chegada - b.chegada;
         });
         
-        let processoEscolhido = processosDisponiveis[0];
-        let idProcesso = processoEscolhido[0];
-        let duracao = processoEscolhido[1];
+        let escolhido = disponiveis[0];
         
-        // Calcula os tempos de execução no Gráfico de Gantt
-        let inicioProcesso = tempoAtual;
-        let fimProcesso = inicioProcesso + duracao;
+        // Calcula os dados da tabela
         
-        ganttCoordenadas.push([idProcesso, inicioProcesso, fimProcesso]);
+        let inicioExecucao = tempoAtual;
+        let termino = inicioExecucao + escolhido.execucao;
+        let turnaround = termino - escolhido.chegada;
+        let tempoEspera = inicioExecucao - escolhido.chegada;
+        let deadlineOk = (termino <= escolhido.deadline) ? "Sim" : "Não";
         
-        // Atualiza o tempo atual do sistema
-        tempoAtual = fimProcesso;
+        // Guarda o objeto com a estrutura da tabela para cada processo, individualmente
+        tabelaFinal.push({
+            pid: escolhido.pid,
+            chegada: escolhido.chegada,
+            execucao: escolhido.execucao,
+            deadline: escolhido.deadline,
+            prioridade: escolhido.prioridade,
+            termino: termino,
+            espera: tempoEspera,
+            turnaround: turnaround,
+            deadlineOk: deadlineOk
+        });
         
-        // Remove o processo que acabou de ser executado da lista de pendentes
-        let index = processosRestantes.findIndex(p => p[0] === idProcesso);
-        processosRestantes.splice(index, 1);
+        // Registra a execução no gráfico de Gantt
+        ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino]);
+        
+        // Avança o tempo do sistema
+        tempoAtual = termino;
+        
+        // Remove o processo executado da lista de pendentes
+        processosRestantes = processosRestantes.filter(p => p.pid !== escolhido.pid);
     }
     
-    return ganttCoordenadas;
-
+    // Retorna os dois conjuntos de dados necessários para a interface
+    return { tabelaFinal, ganttCoordenadas };
 }
 
 //[[id do processo, duração do processo, tempo de chegada]]

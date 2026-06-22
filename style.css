@@ -1,3 +1,7 @@
+*,*::before,*::after {
+    box-sizing: border-box;
+}
+
 :root{
     --cor-base: hsl(0, 0%, 0%);
     --cor-corpo: hsl(0, 0%, 100%);
@@ -126,4 +130,36 @@ footer{
 
 footer a {
     color: var(--cor-link);
+}
+
+/* Estilo da Tabela de Agendamento e Componentes Relacionados */
+
+.tabela_agendamento  {
+    background-color: white;
+    border: 1px solid black;
+    text-align: center;
+    border-collapse: collapse;
+    th,td {
+        border: 1px solid #AAAAAA;
+        padding: 7px 7px;
+        font-size: 18px;
+    }
+}
+
+.btn {
+    padding: 10px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: white;
+}
+.btn-adicionar {
+    background-color: green;
+}
+
+.btn-remover {
+    background-color: red;
+}
+
+.btn-simular {
+    background-color: blue;
 }
