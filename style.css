@@ -134,16 +134,17 @@ footer a {
 
 /* Estilo da Tabela de Agendamento e Componentes Relacionados */
 
-.tabela_agendamento  {
+.tabela-agendamento  {
     background-color: white;
     border: 1px solid black;
     text-align: center;
     border-collapse: collapse;
+
     th,td {
         border: 1px solid #AAAAAA;
         padding: 7px 7px;
         font-size: 18px;
-    }
+    };
 }
 
 .btn {

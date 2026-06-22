@@ -33,21 +33,24 @@
         </div>
         <div class="conteudo config">
             <h3>Configuração do Escalonador</h3>
-            <label for="placeholder">Tempo de Chegada</label>
-            <input type="number" name="tempochegada" id="tempochegada">
+            <label for="tempochegada">Tempo de Chegada:</label>
+            <input type="number" name="tempochegada" class="entradas" id="tempochegada">
             <br>
-            <label for="placeholder">Tempo de Execução</label>
-            <input type="number" name="tempochegada" id="tempoexecucao">
+            <label for="tempoexecucao">Tempo de Execução:</label>
+            <input type="number" name="execucao" class="entradas" id="tempoexecucao">
+            <br>
+            <!-- <label for="quantum">Quantum:</label>
+            <input type="number" name="quantum" class="entradas" id="quantum"> -->
             <br>
             <br>
             <button class="btn btn-adicionar">Adicionar Processo (+)</button>
             <button class="btn btn-remover">Remover Processo (-)</button>
-            <button class="btn btn-simular">Simular Escalonador</button>
+            <button class="btn btn-simular" data-escalonador="sjf">Simular Escalonador</button>
         </div>
         <div class="conteudo tabela">
             <h3>Tabela de Agendamento</h3>
-            <table class="tabela_agendamento">
-                <thead>
+            <table class="tabela-agendamento">
+                <thead class="tabela-agendamento__cabeca">
                     <tr>
                         <th>PID</th>
                         <th>Tempo de Chegada</th>
@@ -60,8 +63,7 @@
                         <th>Deadline Ok?</th>
                     </tr>
                 </thead>
-                <tbody>
-
+                <tbody class="tabela-agendamento__corpo">
                 </tbody>
             </table>
         </div>
