@@ -33,13 +33,13 @@ entradasInput.forEach(entrada => {
 
     // TODO: Remover esse monte de if | Pretendo fazer isso com o objeto configuracaoEscalonador
 
-    
-    if (e.target.id === 'tempochegada') {
-        tempoChegada = Number(document.getElementById('tempochegada').value)
+
+    if (e.target.id === 'tempoChegada') {
+        tempoChegada = Number(document.getElementById('tempoChegada').value)
     }
 
-    if (e.target.id === 'tempoexecucao') {
-        tempoExecucao = Number(document.getElementById('tempoexecucao').value)
+    if (e.target.id === 'tempoExecucao') {
+        tempoExecucao = Number(document.getElementById('tempoExecucao').value)
     }
 
     if (e.target.id === 'quantum') {
