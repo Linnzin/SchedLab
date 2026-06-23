@@ -19,7 +19,7 @@ function lerParametros(){
     */
 }
 
-function sjf(arrayProcessos) {
+function sjf(arrayProcessos, sobrecargaContexto = 0) { // <-- Adicionado o parâmetro de sobrecarga
     
     // Formato esperado para cada um dos processos: [PID, Chegada, Execução, Deadline, Prioridade]
     let processosRestantes = arrayProcessos.map(p => ({
@@ -30,8 +30,8 @@ function sjf(arrayProcessos) {
         prioridade: p[4] ?? 0
     }));
     
-    let tabelaFinal = [];      // Armazena as linhas da tabela calculadas
-    let ganttCoordenadas = []; // Armazena os blocos do gráfico: [PID, Inicio, Fim]
+    let tabelaFinal = [];      
+    let ganttCoordenadas = []; 
     let tempoAtual = 0;
     
     while (processosRestantes.length > 0) {
@@ -40,17 +40,12 @@ function sjf(arrayProcessos) {
         
         if (disponiveis.length === 0) {
             let proximaChegada = Math.min(...processosRestantes.map(p => p.chegada));
-            // Calcula a ociosidade 
             ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada]);
             tempoAtual = proximaChegada;
             continue;
         }
         
-        ///// IMPLEMENTAÇÃO DO SJF
-
-        // Inicialmente irá fazer o SJF clássico.
-        // Mas se houver empate, irá usar FCFS para desempatar
-
+        // Ordenação SJF e desempate feito com FCFS
         disponiveis.sort((a, b) => {
             if (a.execucao !== b.execucao) {
                 return a.execucao - b.execucao;
@@ -59,16 +54,25 @@ function sjf(arrayProcessos) {
         });
         
         let escolhido = disponiveis[0];
+
+        // ==========================================
+        // --- INSERÇÃO DA SOBRECARGA DE CONTEXTO ---
+
+        if (sobrecargaContexto > 0) {
+            // Registra o bloco de sobrecarga no gráfico de Gantt (para pintar de vermelho depois)
+            ganttCoordenadas.push(["Sobrecarga", tempoAtual, tempoAtual + sobrecargaContexto]);
+
+            tempoAtual += sobrecargaContexto;
+        }
+        // ==========================================
         
-        // Calcula os dados da tabela
-        
+        // Calcula os dados da tabela (Agora com o tempoAtual)
         let inicioExecucao = tempoAtual;
         let termino = inicioExecucao + escolhido.execucao;
         let turnaround = termino - escolhido.chegada;
         let tempoEspera = inicioExecucao - escolhido.chegada;
         let deadlineOk = (termino <= escolhido.deadline) ? "Sim" : "Não";
         
-        // Guarda o objeto com a estrutura da tabela para cada processo, individualmente
         tabelaFinal.push({
             pid: escolhido.pid,
             chegada: escolhido.chegada,
@@ -81,17 +85,15 @@ function sjf(arrayProcessos) {
             deadlineOk: deadlineOk
         });
         
-        // Registra a execução no gráfico de Gantt
+        // Registra a execução real do processo no gráfico de Gantt (para pintar de verde)
         ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino]);
         
-        // Avança o tempo do sistema
+        // Avança o tempo do sistema para o final da execução do processo
         tempoAtual = termino;
         
-        // Remove o processo executado da lista de pendentes
         processosRestantes = processosRestantes.filter(p => p.pid !== escolhido.pid);
     }
     
-    // Retorna os dois conjuntos de dados necessários para a interface
     return { tabelaFinal, ganttCoordenadas };
 }
 

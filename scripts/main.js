@@ -2,15 +2,38 @@
 
 // Elementos da configuração do escalonador | Entradas do usuário
 
-let tempoChegada
-let tempoExecucao
-let quantum
+let tempoChegada;
+let tempoExecucao;
+let quantum;
+let prioridade;          
+let deadline;            
+let sobrecargaContexto;
+
+/* const configuracaoEscalonador = {
+    tempochegada: null,
+    tempoexecucao: null,
+    quantum: null,
+    prioridade: null,
+    deadline: null,
+    sobrecargacontexto: null
+}; */
+
 const entradasInput = document.querySelectorAll('.entradas')
 
 // Atualizar os valores
 
 entradasInput.forEach(entrada => {
     entrada.addEventListener('change', function(e) {
+/* 
+        const id = e.target.id;
+
+        if (id in configuracaoEscalonador) {
+            configuracaoEscalonador
+        } */
+
+    // TODO: Remover esse monte de if | Pretendo fazer isso com o objeto configuracaoEscalonador
+
+    
     if (e.target.id === 'tempochegada') {
         tempoChegada = Number(document.getElementById('tempochegada').value)
     }
@@ -23,11 +46,25 @@ entradasInput.forEach(entrada => {
         quantum = Number(document.getElementById('quantum').value)
     }
 
-    console.log(`${tempoChegada} , ${tempoExecucao}, ${quantum}`);
+    if (e.target.id === 'prioridade') {
+            prioridade = Number(document.getElementById('prioridade').value);
+        }
+
+        if (e.target.id === 'deadline') { 
+            deadline = Number(document.getElementById('deadline').value);
+        }
+
+        if (e.target.id === 'sobrecargacontexto') {
+            sobrecargaContexto = Number(document.getElementById('sobrecargacontexto').value);
+        }
+
+        console.log(`Chegada: ${tempoChegada} | Execução: ${tempoExecucao} | Quantum: ${quantum} | Prioridade: ${prioridade} | Deadline: ${deadline} | Sobrecarga: ${sobrecargaContexto}`);
 })
 })
 
-///// --- TABELA --- 
+///// ==========================================
+///// ----------------- TABELA -----------------
+
 
 // Array dos processos atuais para posterior processamento
 
@@ -86,3 +123,5 @@ adicionarProcesso.addEventListener('click', function () {
     console.log(arrayProcessosTabela);
 
 })
+
+///// ==========================================
