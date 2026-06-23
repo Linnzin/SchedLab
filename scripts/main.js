@@ -24,7 +24,7 @@ entradasInput.forEach(entrada => {
         const id = e.target.id;
 
         if (id in configuracaoEscalonador) {
-            configuracaoEscalonador[id] = Number(e.target.value)
+            configuracaoEscalonador[id] = e.target.value === '' ? null : Number(e.target.value)
         } 
 
         console.log(configuracaoEscalonador);

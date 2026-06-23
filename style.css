@@ -132,6 +132,11 @@ footer a {
     color: var(--cor-link);
 }
 
+.entradas {
+    width: 250px;            
+    padding: 6px 10px;
+}
+
 /* Estilo da Tabela de Agendamento e Componentes Relacionados */
 
 .tabela-agendamento  {
