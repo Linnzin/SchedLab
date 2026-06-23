@@ -11,8 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
         rel="stylesheet">
-    <script defer src="/scripts/main.js"></script>
-    <script defer src="/scripts/escalonadores/sjf.js"></script>
+    <script defer src="/scripts/main.js" type="module"></script>
 </head>
 
 <body>
@@ -38,18 +37,22 @@
             <input type="number" name="tempoChegada" class="entradas" id="tempoChegada">
             <br>
             <label for="tempoExecucao">Tempo de Execução:</label>
-            <input type="number" name="execucao" class="entradas" id="tempoExecucao">
+            <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao">
             <br>
             <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
-            <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto">
+            <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto" placeholder="0 por padrão.">
             <br>
             <!-- <label for="quantum">Quantum:</label>
             <input type="number" name="quantum" class="entradas" id="quantum"> -->
+            <!-- <label for="prioridade"></label>
+            <input type="number" name="prioridade" id="prioridade"> -->
+            <!-- <label for="deadline"></label>
+            <input type="number" name="deadline" id="prioridade"> -->
             <br>
             <br>
-            <button class="btn btn-adicionar">Adicionar Processo (+)</button>
+            <button class="btn btn-adicionar" data-algoritmo="sjf">Adicionar Processo (+)</button>
             <button class="btn btn-remover">Remover Processo (-)</button>
-            <button class="btn btn-simular" data-escalonador="sjf">Simular Escalonador</button>
+            <button class="btn btn-simular" data-algoritmo="sjf">Simular Escalonador</button>
         </div>
         <div class="conteudo tabela">
             <h3>Tabela de Agendamento</h3>
@@ -95,7 +98,6 @@
             <a href="https://github.com/DasGestirn">Guilherme Xavier</a>
         </div>
     </footer>
-    <script src="/escalonadores/sjf/sjf.js"></script>
 </body>
 
 </html>
