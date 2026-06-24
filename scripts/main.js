@@ -207,7 +207,7 @@ simularEscalonador.addEventListener('click', function(e) {
     });
 
     const sobrecarga = configuracaoEscalonador.sobrecargaContexto || 0;
-    const quantum = configuracaoEscalonador.quantum
+    const quantum = configuracaoEscalonador.quantum || 2;
     let resultadoSimulacao
 
     // Coletar resultados do escalonamento a depender do algoritmo selecionado
@@ -219,6 +219,9 @@ simularEscalonador.addEventListener('click', function(e) {
         case 'robin':
             resultadoSimulacao = robin(processosParaAlgoritmo, quantum, sobrecarga);
             break;
+        case 'edf':
+            resultadoSimulacao = edf(processosParaAlgoritmo, sobrecarga);
+            break
     }
 
     const linhasHtml = Array.from(corpoTabela.children);
@@ -228,6 +231,7 @@ simularEscalonador.addEventListener('click', function(e) {
 
     // Ordena os resultados pelo atributo do ID
     const resultadoTabelaOrdenado = resultadoTabela.toSorted((a,b) => a.pid - b.pid);
+    console.log(resultadoTabelaOrdenado)
     
     // Calcular métricas globais
     const numeroPreempcoes = resultadoSimulacao.numeroPreempcoes;
