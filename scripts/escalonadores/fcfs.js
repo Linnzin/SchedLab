@@ -19,7 +19,7 @@ function lerParametros(){
     */
 }
 
-function fcfs(arrayProcessos){
+export function fcfs(arrayProcessos){
     arrayProcessos.sort((a, b) => (a[2] ?? 0) - (b[2] ?? 0))   
     
     let ganttCoordenadas = []; //[nome, inicio, fim]

@@ -1,7 +1,14 @@
 'use strict';
 
 // Importando escalonadores
+
+import { fcfs } from './escalonadores/fcfs.js'
 import { sjf } from './escalonadores/sjf.js';
+import { prioridade } from './escalonadores/prioridade.js';
+import { robin } from './escalonadores/robin.js';
+import { edf } from './escalonadores/edf.js';
+import { proprio } from './escalonadores/proprio.js';
+
 
 // Elementos da configuração do escalonador | Entradas do usuário
 
@@ -37,7 +44,7 @@ entradasInput.forEach(entrada => {
 
 // Array dos processos atuais para posterior processamento
 
-let arrayProcessosTabela = [];
+let processosTabelaInicial = [];
 
 ///// Elementos
 
@@ -74,8 +81,8 @@ removerProcesso.addEventListener('click', function() {
         return
     }
     corpoTabela.lastElementChild?.remove();
-    arrayProcessosTabela.pop();
-    console.log(arrayProcessosTabela);
+    processosTabelaInicial.pop();
+    console.log(processosTabelaInicial);
 })
 
 // Adiciona os processos somente com o tempo de chegada e execução na tabela de agendamento
@@ -127,7 +134,7 @@ adicionarProcesso.addEventListener('click', function (e) {
     // Se não for o primeiro, o id do processo a ser adicionado será o anterior incrementado por 1.
     const processoID = corpoTabela.childElementCount === 0 ? 1 : Number(Array.from(corpoTabela.children)[Array.from(corpoTabela.children).length - 1].children[0].textContent.slice(1)) + 1;
 
-    arrayProcessosTabela.push({
+    processosTabelaInicial.push({
         id: processoID,
         chegada: configuracaoEscalonador.tempoChegada,
         execucao: configuracaoEscalonador.tempoExecucao,
@@ -144,20 +151,22 @@ adicionarProcesso.addEventListener('click', function (e) {
 
     corpoTabela.insertAdjacentHTML('beforeend', processoStart);
 
-    console.log(arrayProcessosTabela);
+    console.log(processosTabelaInicial);
 
 })
 
 // Acionar simulação do escalonamento 
 
-simularEscalonador.addEventListener('click', function() {
+simularEscalonador.addEventListener('click', function(e) {
 
-    if (arrayProcessosTabela.length === 0) {
+    if (processosTabelaInicial.length === 0) {
         alert("Adicione pelo menos um processo para simular!");
         return;
     }
 
-    const processosParaAlgoritmo = arrayProcessosTabela.map(proc => {
+    const algoritmoSelecionado = e.target.dataset.algoritmo
+
+    const processosParaAlgoritmo = processosTabelaInicial.map(proc => {
         return [
             proc.id, 
             proc.chegada, 
@@ -168,10 +177,43 @@ simularEscalonador.addEventListener('click', function() {
     });
 
     const sobrecarga = configuracaoEscalonador.sobrecargaContexto || 0;
+    const quantum = configuracaoEscalonador.quantum
+    let resultadoSimulacao
 
-    const resultadoSimulacao = sjf(processosParaAlgoritmo, sobrecarga);
+    switch(algoritmoSelecionado) {
+        case "sjf":
+            resultadoSimulacao = sjf(processosParaAlgoritmo, sobrecarga);
+            break;
+    }
 
-    console.log("Resultado Matemático:", resultadoSimulacao);
+    const linhasHtml = Array.from(corpoTabela.children)
+    const resultadoTabela = resultadoSimulacao.tabelaFinal
+    // Ordena os resultados pelo atributo do ID
+    const resultadoTabelaOrdenado = resultadoTabela.toSorted((a,b) => a.pid - b.pid)
+
+    console.log(resultadoTabela)
+    console.log(resultadoTabelaOrdenado)
+    console.log(linhasHtml)
+
+    for(let i = 0; i < resultadoTabelaOrdenado.length; i++) {
+        
+        const conteudoLinhaAtual = Array.from(linhasHtml[i].children)
+        console.log(conteudoLinhaAtual);
+        
+        // Adiciona tempo de término na linha do processo
+        conteudoLinhaAtual[5].textContent = resultadoTabelaOrdenado[i].termino
+
+        // Tempo de espera
+        conteudoLinhaAtual[6].textContent = resultadoTabelaOrdenado[i].espera
+
+        // Turnaround individual do processo
+        conteudoLinhaAtual[7].textContent = resultadoTabelaOrdenado[i].turnaround
+
+        // Deadline_ok?
+        conteudoLinhaAtual[8].textContent = resultadoTabelaOrdenado[i].deadlineOk
+
+    }
+
 
 });
 

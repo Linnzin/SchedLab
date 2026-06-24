@@ -50,7 +50,7 @@ export function sjf(arrayProcessos, sobrecargaContexto = 0) {
         let termino = inicioExecucao + escolhido.execucao;
         let turnaround = termino - escolhido.chegada;
         let tempoEspera = inicioExecucao - escolhido.chegada;
-        let deadlineOk = (termino <= escolhido.deadline) ? "Sim" : "Não";
+        let deadlineOk = '-';
         
         tabelaFinal.push({
             pid: escolhido.pid,
