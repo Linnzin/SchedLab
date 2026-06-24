@@ -42,13 +42,6 @@
             <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
             <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto" placeholder="0 por padrão." min="0" step="1" oninput="validity.valid||(value='');">
             <br>
-            <!-- <label for="quantum">Quantum:</label>
-            <input type="number" name="quantum" class="entradas" id="quantum"> -->
-            <!-- <label for="prioridade"></label>
-            <input type="number" name="prioridade" id="prioridade"> -->
-            <!-- <label for="deadline"></label>
-            <input type="number" name="deadline" id="deadline"> -->
-            <br>
             <br>
             <button class="btn btn-adicionar" data-algoritmo="sjf">Adicionar Processo (+)</button>
             <button class="btn btn-remover">Remover Processo (-)</button>
@@ -72,6 +65,28 @@
                 </thead>
                 <tbody class="tabela-agendamento__corpo">
                 </tbody>
+            </table>
+            <table class="tabela-mediasglobais">
+                <tr>
+                    <th>Tempo de espera médio</th>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>Tempo de Turnaround médio</th>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>Throughput</th>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>% de CPU Ociosa</th>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>Número de preempções</th>
+                    <td>0</td>
+                </tr>
             </table>
         </div>
         <div class="conteudo gantt">

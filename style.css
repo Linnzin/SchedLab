@@ -137,9 +137,9 @@ footer a {
     padding: 6px 10px;
 }
 
-/* Estilo da Tabela de Agendamento e Componentes Relacionados */
+/* Estilo da Tabela de Agendamento, Tabela de Médias Globais e Componentes Relacionados */
 
-.tabela-agendamento  {
+table  {
     background-color: white;
     border: 1px solid black;
     text-align: center;
@@ -150,6 +150,15 @@ footer a {
         padding: 7px 7px;
         font-size: 18px;
     };
+}
+
+.tabela-mediasglobais {
+    margin-top: 32px;
+    margin-left: 73%;
+
+    td {
+        width: 50px;
+    }
 }
 
 .btn {

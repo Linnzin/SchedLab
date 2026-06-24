@@ -71,7 +71,12 @@ export function sjf(arrayProcessos, sobrecargaContexto = 0) {
         tempoAtual = termino;
         
         processosRestantes = processosRestantes.filter(p => p.pid !== escolhido.pid);
+
     }
+    // Como o SJF é não preemptivo, o número de preempções será automaticamente 0
+    const numeroPreempcoes = 0
     
-    return { tabelaFinal, ganttCoordenadas };
+    return { tabelaFinal, 
+        ganttCoordenadas, 
+        numeroPreempcoes }
 }
