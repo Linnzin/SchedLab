@@ -147,9 +147,14 @@ adicionarProcesso.addEventListener('click', function (e) {
                 alert("Erro: O algoritmo EDF exige que o Deadline seja informado!");
                 return;
             }
+            if (configuracaoEscalonador.quantum === null || configuracaoEscalonador.quantum <= 0) {
+                window.alert("Erro: O algoritmo EDF exige um valor válido para o Quantum!");
+                return;
+            }
             break;
 
         case "sjf":
+            break;
         case "fcfs":
             break;
             
@@ -220,7 +225,7 @@ simularEscalonador.addEventListener('click', function(e) {
             resultadoSimulacao = robin(processosParaAlgoritmo, quantum, sobrecarga);
             break;
         case 'edf':
-            resultadoSimulacao = edf(processosParaAlgoritmo, sobrecarga);
+            resultadoSimulacao = edf(processosParaAlgoritmo, sobrecarga, quantum);
             break
     }
 
