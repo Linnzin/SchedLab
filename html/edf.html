@@ -75,6 +75,10 @@
           placeholder="Digite um inteiro maior que 0."
         />
         <br />
+        <label for="quantum">Quantum:</label>
+        <input type="number" name="quantum" class="entradas" id="quantum" min="2" step="1"
+          oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior ou igual 2." />
+        <br />
         <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
         <input
           type="number"

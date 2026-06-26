@@ -1,129 +1,144 @@
-export function edf(arrayProcessos, sobrecargaContexto = 0) {
-    
-    let processos = arrayProcessos.map(p => {
-        // Identifica se o dado veio como objeto ou array
+export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
+
+    // Converte entradas (suporta array ou objeto)
+    let processosNaoChegados = arrayProcessos.map(p => {
         let pid = p.id ?? p[0];
         let chegada = p.chegada ?? p[1];
         let execucao = p.execucao ?? p[2];
         let deadline = p.deadline ?? p[3];
         let prioridade = p.prioridade ?? p[4];
 
-        let deadlineTratado = (deadline === "" || deadline === "-" || deadline === null || deadline === undefined) 
-            ? Infinity 
+        let deadlineTratado = (deadline === "" || deadline === "-" || deadline === null || deadline === undefined)
+            ? Infinity
             : Number(deadline);
 
         return {
-            pid: pid, 
+            pid: pid,
             chegada: Number(chegada) || 0,
             execucao: Number(execucao) || 0,
-            deadline: deadlineTratado, 
+            deadline: deadlineTratado,
             prioridade: Number(prioridade) || 0,
-            tempoRestante: Number(execucao) || 0 
+            tempoRestante: Number(execucao) || 0
         };
     });
 
-    let concluidos = [];
-    let ganttBruto = []; 
+    // Ordena por chegada para facilitar a inserção
+    processosNaoChegados.sort((a, b) => a.chegada - b.chegada);
+
+    let filaProntos = [];
+    let processosConcluidos = [];
+    let ganttCoordenadas = [];
+
     let tempoAtual = 0;
     let numeroPreempcoes = 0;
+    let totalProcessos = processosNaoChegados.length;
+
     let ultimoPid = null;
-    let totalProcessos = processos.length;
+    let ultimoPreemptado = false;   // indica se o último processo foi preemptado
 
-    while (concluidos.length < totalProcessos) {
-        
-        let disponiveis = processos.filter(p => p.chegada <= tempoAtual && p.tempoRestante > 0);
-
-        if (disponiveis.length === 0) {
-            let proximos = processos.filter(p => p.tempoRestante > 0).sort((a,b) => a.chegada - b.chegada);
-            let proximaChegada = proximos[0].chegada;
-            
-            ganttBruto.push({ pid: "Ocioso", inicio: tempoAtual, fim: proximaChegada });
-            tempoAtual = proximaChegada;
-            ultimoPid = "Ocioso";
-            continue; 
+    // Função para mover processos que já chegaram para a fila de prontos
+    const verificarChegadas = (tempo) => {
+        while (processosNaoChegados.length > 0 && processosNaoChegados[0].chegada <= tempo) {
+            filaProntos.push(processosNaoChegados.shift());
         }
+    };
 
-        // ==========================================
-        // --------- ORDENAÇÃO POR DEADLINE ---------
-        disponiveis.sort((a, b) => {
-            if (a.deadline !== b.deadline) {
-
-                // O menor deadline ganha a CPU
-
-                return a.deadline - b.deadline; 
-            }
-            // Desempate com FCFS
-            return a.chegada - b.chegada; 
+    // Função para escolher o processo com menor deadline (EDF)
+    const escolherPorDeadline = () => {
+        if (filaProntos.length === 0) return null;
+        // Ordena por deadline (menor primeiro), desempate por chegada
+        filaProntos.sort((a, b) => {
+            if (a.deadline !== b.deadline) return a.deadline - b.deadline;
+            return a.chegada - b.chegada;
         });
+        return filaProntos.shift();   // remove e retorna o primeiro
+    };
 
-        let escolhido = disponiveis[0];
-        // ==========================================
+    while (processosConcluidos.length < totalProcessos) {
 
-        // --- VERIFICAÇÃO DE PREEMPÇÃO E SOBRECARGA ---
+        verificarChegadas(tempoAtual);
 
-        if (ultimoPid !== null && ultimoPid !== "Ocioso" && ultimoPid !== "Sobrecarga" && ultimoPid !== escolhido.pid) {
-            let pAnterior = processos.find(p => p.pid === ultimoPid);
-            
-            if (pAnterior && pAnterior.tempoRestante > 0) {
-                numeroPreempcoes++;
-                
-                if (sobrecargaContexto > 0) {
-                    ganttBruto.push({ pid: "Sobrecarga", inicio: tempoAtual, fim: tempoAtual + sobrecargaContexto });
-                    tempoAtual += sobrecargaContexto;
-                    ultimoPid = "Sobrecarga";
-                    continue; 
-                }
+        // Se não há processos prontos, fica ocioso até a próxima chegada
+        if (filaProntos.length === 0) {
+            let proximoProcesso = processosNaoChegados[0];
+            if (!proximoProcesso) break; // segurança
+            ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada]);
+            tempoAtual = proximoProcesso.chegada;
+            ultimoPid = null;
+            ultimoPreemptado = false;
+            continue;
+        }
+
+        // Escolhe o processo com menor deadline
+        let escolhido = escolherPorDeadline();
+
+        // ============================================================
+        // SÓ APLICA SOBRECARGA SE O ÚLTIMO PROCESSO FOI PREEMPTADO
+        // ============================================================
+        if (ultimoPid !== null && ultimoPreemptado) {
+            if (sobrecargaContexto > 0) {
+                ganttCoordenadas.push(["Sobrecarga", tempoAtual, tempoAtual + sobrecargaContexto]);
+                tempoAtual += sobrecargaContexto;
+                verificarChegadas(tempoAtual);
+                // Após a sobrecarga, pode ser que novos processos tenham chegado,
+                // mas o escolhido permanece (já foi retirado da fila). 
+                // Se houver um processo com deadline menor que chegou durante a sobrecarga,
+                // ele será considerado na próxima iteração, pois o escolhido já está fora da fila.
+                // Isso é aceitável, pois a sobrecarga é um custo fixo.
             }
         }
 
-        // O processo vai rodar até terminar OU até a chegada do próximo processo no sistema
-        let proximos = processos.filter(p => p.chegada > tempoAtual && p.tempoRestante > 0).sort((a,b) => a.chegada - b.chegada);
-        let tempoExecucao = escolhido.tempoRestante; // A princípio, tenta rodar tudo que falta
+        // Define o quanto o processo vai executar:
+        // - No máximo o quantum
+        // - No máximo o tempo restante
+        let tempoExecutado = Math.min(escolhido.tempoRestante, quantum);
 
-        if (proximos.length > 0) {
-            let proximaChegada = proximos[0].chegada;
-            // Se o tempo que ele precisa for invadir o tempo de uma nova chegada, ele roda só até a nova chegada
-            if (tempoAtual + tempoExecucao > proximaChegada) {
-                tempoExecucao = proximaChegada - tempoAtual;
-            }
-        }
+        // (Opcional) Podemos também limitar até a próxima chegada para preservar a preempção por deadline
+        // Mas como vamos reavaliar a cada quantum, não é estritamente necessário.
+        // Se quiser preempção imediata ao chegar um processo com deadline menor, 
+        // podemos calcular o tempo até a próxima chegada e limitar.
+        // Para manter o comportamento descrito, faremos a verificação apenas no final do quantum.
 
-        // Registra a fatia de tempo e avança o relógio
-        ganttBruto.push({ pid: escolhido.pid, inicio: tempoAtual, fim: tempoAtual + tempoExecucao });
-        tempoAtual += tempoExecucao;
-        escolhido.tempoRestante -= tempoExecucao;
-        ultimoPid = escolhido.pid;
+        let inicioExecucao = tempoAtual;
+        let termino = inicioExecucao + tempoExecutado;
 
-        // Verifica se terminou de verdade
-        if (escolhido.tempoRestante === 0) {
+        // Registra o bloco no Gantt
+        ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino]);
+
+        // Avança o tempo e desconta o que rodou
+        tempoAtual = termino;
+        escolhido.tempoRestante -= tempoExecutado;
+
+        // Verifica se novos processos chegaram durante a execução
+        verificarChegadas(tempoAtual);
+
+        // Atualiza estado do processo
+        if (escolhido.tempoRestante > 0) {
+            // Processo não terminou → foi preemptado
+            numeroPreempcoes++;
+            // Coloca de volta na fila de prontos (será reordenado na próxima escolha)
+            filaProntos.push(escolhido);
+            ultimoPreemptado = true;
+        } else {
+            // Processo terminou
             escolhido.termino = tempoAtual;
-            concluidos.push(escolhido);
+            processosConcluidos.push(escolhido);
+            ultimoPreemptado = false;
         }
+
+        ultimoPid = escolhido.pid;
     }
 
-    let ganttCoordenadas = [];
-    if (ganttBruto.length > 0) {
-        let blocoAtual = ganttBruto[0];
-        for (let i = 1; i < ganttBruto.length; i++) {
-            if (ganttBruto[i].pid === blocoAtual.pid) {
-                blocoAtual.fim = ganttBruto[i].fim;
-            } else {
-                ganttCoordenadas.push([blocoAtual.pid, blocoAtual.inicio, blocoAtual.fim]);
-                blocoAtual = ganttBruto[i];
-            }
-        }
-        ganttCoordenadas.push([blocoAtual.pid, blocoAtual.inicio, blocoAtual.fim]);
-    }
-
-    let tabelaFinal = concluidos.map(p => {
+    // Monta tabela final
+    let tabelaFinal = processosConcluidos.map(p => {
         let turnaround = p.termino - p.chegada;
-        let espera = turnaround - p.execucao; 
-        
+        let espera = turnaround - p.execucao;
+
         let cumpriuDeadline = "-";
         if (p.deadline !== Infinity) {
-            cumpriuDeadline = Number(p.termino) <= Number(p.deadline) ? "Sim" : "Não";
+            cumpriuDeadline = p.termino <= p.deadline ? "Sim" : "Não";
         }
-        
+
         return {
             pid: p.pid,
             chegada: p.chegada,
@@ -133,7 +148,7 @@ export function edf(arrayProcessos, sobrecargaContexto = 0) {
             termino: p.termino,
             espera: espera,
             turnaround: turnaround,
-            deadlineOk: cumpriuDeadline 
+            deadlineOk: cumpriuDeadline
         };
     });
 

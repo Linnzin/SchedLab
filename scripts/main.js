@@ -206,8 +206,8 @@ simularEscalonador.addEventListener('click', function(e) {
             proc.id, 
             proc.chegada, 
             proc.execucao, 
-            configuracaoEscalonador.deadline || Infinity, 
-            configuracaoEscalonador.prioridade || 0
+            proc.deadline ?? Infinity, 
+            proc.prioridade ?? 0
         ];
     });
 
@@ -225,7 +225,7 @@ simularEscalonador.addEventListener('click', function(e) {
             resultadoSimulacao = robin(processosParaAlgoritmo, quantum, sobrecarga);
             break;
         case 'edf':
-            resultadoSimulacao = edf(processosParaAlgoritmo, sobrecarga, quantum);
+            resultadoSimulacao = edf(processosParaAlgoritmo, quantum, sobrecarga);
             break
     }
 
