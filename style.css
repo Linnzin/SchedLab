@@ -115,6 +115,11 @@ main.escalonador{
     justify-items: center;
 }
 
+#gantt-chart{
+  width: 100%;
+  display: block;
+}
+
 footer{
     color: var(--cor-texto);
     background-color: var(--cor-base);
@@ -132,6 +137,8 @@ footer a {
     color: var(--cor-link);
 }
 
+
+/* ============================================================= */
 .entradas {
     width: 250px;            
     padding: 6px 10px;
