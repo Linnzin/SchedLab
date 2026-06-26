@@ -1,3 +1,7 @@
+*,*::before,*::after {
+    box-sizing: border-box;
+}
+
 :root{
     --cor-base: hsl(0, 0%, 0%);
     --cor-corpo: hsl(0, 0%, 100%);
@@ -111,6 +115,11 @@ main.escalonador{
     justify-items: center;
 }
 
+#gantt-chart{
+  width: 100%;
+  display: block;
+}
+
 footer{
     color: var(--cor-texto);
     background-color: var(--cor-base);
@@ -126,4 +135,53 @@ footer{
 
 footer a {
     color: var(--cor-link);
+}
+
+
+/* ============================================================= */
+.entradas {
+    width: 250px;            
+    padding: 6px 10px;
+}
+
+/* Estilo da Tabela de Agendamento, Tabela de Médias Globais e Componentes Relacionados */
+
+table  {
+    background-color: white;
+    border: 1px solid black;
+    text-align: center;
+    border-collapse: collapse;
+
+    th,td {
+        border: 1px solid #AAAAAA;
+        padding: 7px 7px;
+        font-size: 18px;
+    };
+}
+
+.tabela-mediasglobais {
+    margin-top: 32px;
+    margin-left: 73%;
+
+    td {
+        width: 50px;
+    }
+}
+
+.btn {
+    padding: 10px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: white;
+}
+.btn-adicionar {
+    background-color: green;
+}
+
+.btn-remover {
+    background-color: red;
+}
+
+.btn-simular {
+    background-color: blue;
 }

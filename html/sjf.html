@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SJF</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet" />
+  <script defer src="../scripts/main.js" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <a href="../index.html">Escalonadores</a>
+  </header>
+
+  <main class="escalonador">
+    <div class="conteudo explicacao">
+      <h3>SJF – Shortest Job First</h3>
+      <p>
+        A filosofia do SJF é a eficiência pelo caminho mais rápido: o sistema
+        operacional analisa a fila e escolhe o processo que exige o menor
+        tempo de execução para rodar primeiro. Uma vez que o processo assume o
+        processador, ninguém o interrompe até que ele termine. A grande
+        vantagem matemática deste modelo é que ele oferece o menor tempo de
+        espera médio entre todos os algoritmos. Contudo, ele enfrenta um
+        problema crítico no mundo real: é extremamente difícil prever com
+        precisão quanto tempo um programa vai demorar para rodar antes de ele
+        começar. Além disso, se muitos processos curtos continuarem chegando,
+        um processo longo pode sofrer "inanição" (starvation) e nunca ser
+        executado. É muito utilizado em simulações teóricas de desempenho e em
+        ambientes de supercomputação ou processamento de relatórios, onde os
+        tempos de tarefa são previsíveis.
+      </p>
+    </div>
+
+    <div class="conteudo config">
+      <h3>Configuração do Escalonador</h3>
+      <label for="tempoChegada">Tempo de Chegada:</label>
+      <input type="number" name="tempoChegada" class="entradas" id="tempoChegada" min="1" step="1"
+        oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
+      <br />
+      <label for="tempoExecucao">Tempo de Execução:</label>
+      <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao" min="0" step="1"
+        oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
+      <br />
+      <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
+      <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto"
+        placeholder="0 por padrão." min="0" step="1" oninput="validity.valid || (value = '')" />
+      <br />
+      <br />
+      <button class="btn btn-adicionar" data-algoritmo="sjf">
+        Adicionar Processo (+)
+      </button>
+      <button class="btn btn-remover">Remover Processo (-)</button>
+      <button class="btn btn-simular" data-algoritmo="sjf">
+        Simular Escalonador
+      </button>
+    </div>
+
+    <div class="conteudo tabela">
+      <h3>Tabela de Agendamento</h3>
+      <table class="tabela-agendamento">
+        <thead class="tabela-agendamento__cabeca">
+          <tr>
+            <th>PID</th>
+            <th>Tempo de Chegada</th>
+            <th>Tempo de Execução</th>
+            <th>Deadline</th>
+            <th>Prioridade</th>
+            <th>Término</th>
+            <th>Tempo de Espera</th>
+            <th>Turnaround</th>
+            <th>Deadline Ok?</th>
+          </tr>
+        </thead>
+        <tbody class="tabela-agendamento__corpo"></tbody>
+      </table>
+      <table class="tabela-mediasglobais">
+        <tr>
+          <th>Tempo de espera médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Tempo de Turnaround médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Throughput</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>% de CPU Ociosa</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Número de preempções</th>
+          <td>0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="conteudo gantt">
+      <h3>Diagrama de Gantt</h3>
+    </div>
+
+    <div class="conteudo grafico">
+      <h3>Grafico de Desempenho</h3>
+    </div>
+
+  </main>
+
+  <footer>
+    <div>
+      <h2>Source</h2>
+      <a href="https://github.com/Linnzin/escalonadores_so.git">Repositório no GitHub</a>
+    </div>
+    <div>
+      <h2>Sobre</h2>
+      <p>[mini texto explicando o motivo desse projeto]</p>
+      <img src="/icons/brasao_ufba_sem_fundo.png" alt="Brasão da UFBA" height="50px" />
+    </div>
+    <div>
+      <h2>GitHub</h2>
+      <a href="https://github.com/JacquesSalah">Jacques Salah</a><br />
+      <a href="https://github.com/Linnzin">Lincoln Pereira</a><br />
+      <a href="https://github.com/DasGestirn">Guilherme Xavier</a>
+    </div>
+  </footer>
+</body>
+
+</html>
