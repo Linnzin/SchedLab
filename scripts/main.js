@@ -44,7 +44,7 @@ entradasInput.forEach(entrada => {
 
 let processosTabelaInicial = [];
 
-///// Elementos
+// Elementos
 
 const adicionarProcesso = document.querySelector('.btn-adicionar');
 const removerProcesso = document.querySelector('.btn-remover');
@@ -118,14 +118,14 @@ removerProcesso.addEventListener('click', function () {
 adicionarProcesso.addEventListener('click', function (e) {
 
   // Impedir o processo de ser adicionado se possuir input vazio para cada tipo de escalonador
-
   if (configuracaoEscalonador.tempoChegada === null || configuracaoEscalonador.tempoExecucao === null) {
     window.alert("Erro: O Tempo de Chegada e o Tempo de Execução são obrigatórios!")
     return
   }
-
+  // Detecta o escalonador
   const algoritmoSelecionado = e.target.dataset.algoritmo
 
+  // Essas verificações poderiam ser valores default
   switch (algoritmoSelecionado) {
 
     case "robin":
@@ -193,7 +193,6 @@ adicionarProcesso.addEventListener('click', function (e) {
 simularEscalonador.addEventListener('click', function (e) {
 
   // Guard clause para impedir a simulação sem processos
-
   if (processosTabelaInicial.length === 0) {
     alert("Adicione pelo menos um processo para simular!");
     return;

@@ -72,7 +72,7 @@ function ganttChart(processes, escalonador) {
     },
     yAxis: {
       title: '',
-      categories: processes.map(proc => `ID: ${proc[0]}`),
+      categories: Array.from(new Set(processes.map(proc => `ID: ${proc[0]}`))),
       gridLineWidth: 1
     },
     legend: {
