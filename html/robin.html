@@ -1,173 +1,136 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Round-Robin</title>
-    <link rel="stylesheet" href="/style.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
-      rel="stylesheet"
-    />
-    <script defer src="/scripts/main.js" type="module"></script>
-  </head>
-  <body>
-    <header>
-      <a href="/index.html">Escalonadores</a>
-    </header>
-    <main class="escalonador">
-      <div class="conteudo explicacao">
-        <h3>Round-Robin – Quantum Fixo</h3>
-        <p>
-          Projetado especificamente para sistemas de tempo compartilhado (como
-          os sistemas operacionais de computadores e celulares que usamos no dia
-          a dia), o Round-Robin introduz o conceito de quantum, que é um limite
-          fixo de tempo de processamento. Os processos são organizados em uma
-          fila circular: cada um ganha o direito de rodar durante um quantum; se
-          o tempo acabar e a tarefa não tiver terminado, o processo sofre
-          preempção (é interrompido à força), vai para o fim da fila e o próximo
-          da vez assume. Isso elimina o risco de inanição e garante um tempo de
-          resposta incrivelmente rápido e justo para o usuário. A eficiência do
-          algoritmo depende do ajuste do quantum: se for muito curto, o sistema
-          perde tempo demais trocando de contexto; se for muito longo, ele vira
-          um FIFO. É a base do escalonamento de sistemas operacionais modernos
-          como Linux e Windows para garantir a interatividade da interface.
-        </p>
-      </div>
-      <div class="conteudo config">
-        <h3>Configuração do Escalonador</h3>
-        <label for="tempoChegada">Tempo de Chegada:</label>
-        <input
-          type="number"
-          name="tempoChegada"
-          class="entradas"
-          id="tempoChegada"
-          min="1"
-          step="1"
-          oninput="validity.valid || (value = '')"
-          placeholder="Digite um inteiro maior que 0."
-        />
-        <br />
-        <label for="tempoExecucao">Tempo de Execução:</label>
-        <input
-          type="number"
-          name="tempoExecucao"
-          class="entradas"
-          id="tempoExecucao"
-          min="0"
-          step="1"
-          oninput="validity.valid || (value = '')"
-          placeholder="Digite um inteiro maior que 0."
-        />
-        <br />
-        <label for="quantum">Quantum:</label>
-        <input
-          type="number"
-          name="quantum"
-          class="entradas"
-          id="quantum"
-          min="2"
-          step="1"
-          oninput="validity.valid || (value = '')"
-          placeholder="Digite um inteiro maior ou igual 2."
-        />
-        <br />
-        <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
-        <input
-          type="number"
-          name="sobrecargaContexto"
-          class="entradas"
-          id="sobrecargaContexto"
-          placeholder="0 por padrão."
-          min="0"
-          step="1"
-          oninput="validity.valid || (value = '')"
-        />
-        <br />
-        <br />
-        <button class="btn btn-adicionar" data-algoritmo="robin">
-          Adicionar Processo (+)
-        </button>
-        <button class="btn btn-remover">Remover Processo (-)</button>
-        <button class="btn btn-simular" data-algoritmo="robin">
-          Simular Escalonador
-        </button>
-      </div>
-      <div class="conteudo tabela">
-        <h3>Tabela de Agendamento</h3>
-        <table class="tabela-agendamento">
-          <thead class="tabela-agendamento__cabeca">
-            <tr>
-              <th>PID</th>
-              <th>Tempo de Chegada</th>
-              <th>Tempo de Execução</th>
-              <th>Deadline</th>
-              <th>Prioridade</th>
-              <th>Término</th>
-              <th>Tempo de Espera</th>
-              <th>Turnaround</th>
-              <th>Deadline Ok?</th>
-            </tr>
-          </thead>
-          <tbody class="tabela-agendamento__corpo"></tbody>
-        </table>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Round-Robin</title>
+  <link rel="stylesheet" href="/style.css" />
 
-        <table class="tabela-mediasglobais">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet" />
+  <script defer src="/scripts/main.js" type="module"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/index.html">Escalonadores</a>
+  </header>
+  <main class="escalonador">
+    <div class="conteudo explicacao">
+      <h3>Round-Robin – Quantum Fixo</h3>
+      <p>
+        Projetado especificamente para sistemas de tempo compartilhado (como
+        os sistemas operacionais de computadores e celulares que usamos no dia
+        a dia), o Round-Robin introduz o conceito de quantum, que é um limite
+        fixo de tempo de processamento. Os processos são organizados em uma
+        fila circular: cada um ganha o direito de rodar durante um quantum; se
+        o tempo acabar e a tarefa não tiver terminado, o processo sofre
+        preempção (é interrompido à força), vai para o fim da fila e o próximo
+        da vez assume. Isso elimina o risco de inanição e garante um tempo de
+        resposta incrivelmente rápido e justo para o usuário. A eficiência do
+        algoritmo depende do ajuste do quantum: se for muito curto, o sistema
+        perde tempo demais trocando de contexto; se for muito longo, ele vira
+        um FIFO. É a base do escalonamento de sistemas operacionais modernos
+        como Linux e Windows para garantir a interatividade da interface.
+      </p>
+    </div>
+    <div class="conteudo config">
+      <h3>Configuração do Escalonador</h3>
+      <label for="tempoChegada">Tempo de Chegada:</label>
+      <input type="number" name="tempoChegada" class="entradas" id="tempoChegada" min="1" step="1"
+        oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
+      <br />
+      <label for="tempoExecucao">Tempo de Execução:</label>
+      <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao" min="0" step="1"
+        oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
+      <br />
+      <label for="quantum">Quantum:</label>
+      <input type="number" name="quantum" class="entradas" id="quantum" min="2" step="1"
+        oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior ou igual 2." />
+      <br />
+      <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
+      <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto"
+        placeholder="0 por padrão." min="0" step="1" oninput="validity.valid || (value = '')" />
+      <br />
+      <br />
+      <button class="btn btn-adicionar" data-algoritmo="robin">
+        Adicionar Processo (+)
+      </button>
+      <button class="btn btn-remover">Remover Processo (-)</button>
+      <button class="btn btn-simular" data-algoritmo="robin">
+        Simular Escalonador
+      </button>
+    </div>
+    <div class="conteudo tabela">
+      <h3>Tabela de Agendamento</h3>
+      <table class="tabela-agendamento">
+        <thead class="tabela-agendamento__cabeca">
           <tr>
-            <th>Tempo de espera médio</th>
-            <td>-</td>
+            <th>PID</th>
+            <th>Tempo de Chegada</th>
+            <th>Tempo de Execução</th>
+            <th>Deadline</th>
+            <th>Prioridade</th>
+            <th>Término</th>
+            <th>Tempo de Espera</th>
+            <th>Turnaround</th>
+            <th>Deadline Ok?</th>
           </tr>
-          <tr>
-            <th>Tempo de Turnaround médio</th>
-            <td>-</td>
-          </tr>
-          <tr>
-            <th>Throughput</th>
-            <td>-</td>
-          </tr>
-          <tr>
-            <th>% de CPU Ociosa</th>
-            <td>-</td>
-          </tr>
-          <tr>
-            <th>Número de preempções</th>
-            <td>0</td>
-          </tr>
-        </table>
-      </div>
-      <div class="conteudo gantt">
-        <h3>Diagrama de Gantt</h3>
-      </div>
-      <div class="conteudo grafico">
-        <h3>Grafico de Desempenho</h3>
-      </div>
-    </main>
-    <footer>
-      <div>
-        <h2>Source</h2>
-        <a href="https://github.com/Linnzin/escalonadores_so.git"
-          >Repositório no GitHub</a
-        >
-      </div>
-      <div>
-        <h2>Sobre</h2>
-        <p>[mini texto explicando o motivo desse projeto]</p>
-        <img
-          src="/icons/brasao_ufba_sem_fundo.png"
-          alt="Brasão da UFBA"
-          height="50px"
-        />
-      </div>
-      <div>
-        <h2>GitHub</h2>
-        <a href="https://github.com/JacquesSalah">Jacques Salah</a><br />
-        <a href="https://github.com/Linnzin">Lincoln Pereira</a><br />
-        <a href="https://github.com/DasGestirn">Guilherme Xavier</a>
-      </div>
-    </footer>
-    <script src="/escalonadores/robin/robin.js"></script>
-  </body>
+        </thead>
+        <tbody class="tabela-agendamento__corpo"></tbody>
+      </table>
+
+      <table class="tabela-mediasglobais">
+        <tr>
+          <th>Tempo de espera médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Tempo de Turnaround médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Throughput</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>% de CPU Ociosa</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Número de preempções</th>
+          <td>0</td>
+        </tr>
+      </table>
+    </div>
+    <div class="conteudo gantt">
+      <h3>Diagrama de Gantt</h3>
+    </div>
+    <div class="conteudo grafico">
+      <h3>Grafico de Desempenho</h3>
+    </div>
+  </main>
+  <footer>
+    <div>
+      <h2>Source</h2>
+      <a href="https://github.com/Linnzin/escalonadores_so.git">Repositório no GitHub</a>
+    </div>
+    <div>
+      <h2>Sobre</h2>
+      <p>[mini texto explicando o motivo desse projeto]</p>
+      <img src="/icons/brasao_ufba_sem_fundo.png" alt="Brasão da UFBA" height="50px" />
+    </div>
+    <div>
+      <h2>GitHub</h2>
+      <a href="https://github.com/JacquesSalah">Jacques Salah</a><br />
+      <a href="https://github.com/Linnzin">Lincoln Pereira</a><br />
+      <a href="https://github.com/DasGestirn">Guilherme Xavier</a>
+    </div>
+  </footer>
+  <script src="/escalonadores/robin/robin.js"></script>
+</body>
+
 </html>

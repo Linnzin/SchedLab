@@ -1,3 +1,3 @@
 export function proprio() {
-    return null
+  return null
 }
