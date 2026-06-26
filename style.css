@@ -1,187 +1,209 @@
-*,*::before,*::after {
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-:root{
-    --cor-base: hsl(0, 0%, 0%);
-    --cor-corpo: hsl(0, 0%, 100%);
-    --cor-destaque: hsl(0, 100%, 50%);
+:root {
+  --cor-base: hsl(0, 0%, 0%);
+  --cor-corpo: hsl(0, 0%, 100%);
+  --cor-destaque: hsl(0, 100%, 50%);
 
-    --cor-texto: hsl(from var(--cor-base) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100)); 
-    --cor-texto-corpo: hsl(from var(--cor-corpo) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100)); 
-    --cor-link: hsl(from var(--cor-base) clamp(180, (l - 60) * 1000, 235) 100 50);
+  --cor-texto: hsl(from var(--cor-base) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100));
+  --cor-texto-corpo: hsl(from var(--cor-corpo) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100));
+  --cor-link: hsl(from var(--cor-base) clamp(180, (l - 60) * 1000, 235) 100 50);
 }
 
-html{
-    font-size: 20px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+html {
+  font-size: 20px;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
-body{
-    height: 100dvh;
-    margin: 0;
-    display: grid;
-    grid-template-rows: 90px 1fr 360px;
-    grid-template-columns: 100%;
-    background-color: hsl(from var(--cor-corpo) h s l / .7);
+body {
+  height: 100dvh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 90px 1fr 360px;
+  grid-template-columns: 100%;
+  background-color: hsl(from var(--cor-corpo) h s l / .7);
 }
 
-header{
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: var(--cor-base);
-    color: var(--cor-texto);
-    margin: 0;
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    justify-items: center;
-    box-shadow: 0px 0px 80px 15px var(--cor-base);
-    border-bottom: 2px solid hsl(from var(--cor-texto) h s l / .7);
-    font-size: 2rem;
-    font-weight: bold;
-    font-style: italic;
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--cor-base);
+  color: var(--cor-texto);
+  margin: 0;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  box-shadow: 0px 0px 80px 15px var(--cor-base);
+  border-bottom: 2px solid hsl(from var(--cor-texto) h s l / .7);
+  font-size: 2rem;
+  font-weight: bold;
+  font-style: italic;
 }
 
-header a{
-    color: var(--cor-texto);
-    text-decoration: none;
+header a {
+  color: var(--cor-texto);
+  text-decoration: none;
 }
 
-main{
-    padding: 100px;
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: 90px 300px 300px;
-    grid-template-areas: 
-        "pos-0 pos-0 pos-0 pos-0 pos-0"
-        "pos-1 pos-2 pos-3 pos-4 pos-5"
-        "pos-6 pos-6 pos-6 pos-6 pos-6";
+main {
+  padding: 100px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 90px 300px 300px;
+  grid-template-areas:
+    "pos-0 pos-0 pos-0 pos-0 pos-0"
+    "pos-1 pos-2 pos-3 pos-4 pos-5"
+    "pos-6 pos-6 pos-6 pos-6 pos-6";
 }
 
-.escolha{
-    display: grid;
-    grid-template-rows: 2em 2em 1fr;
-    padding: 1rem;
-    justify-items: center;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
+.escolha {
+  display: grid;
+  grid-template-rows: 2em 2em 1fr;
+  padding: 1rem;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
 
-    font-size: inherit;
-    font-family: inherit;
-    text-align: justify;
-    text-decoration: none;
-    
-    color: var(--cor-texto-corpo);
-    border: 2px solid var(--cor-base);
-    
-    transition: transform 0.2s ease;
-    background-color: hsla(from var(--cor-base) h l s / 0.2);
+  font-size: inherit;
+  font-family: inherit;
+  text-align: justify;
+  text-decoration: none;
+
+  color: var(--cor-texto-corpo);
+  border: 2px solid var(--cor-base);
+
+  transition: transform 0.2s ease;
+  background-color: hsla(from var(--cor-base) h l s / 0.2);
 }
 
-.escolha.titulo{
-    grid-template-rows: 1fr;
+.escolha.titulo {
+  grid-template-rows: 1fr;
 }
 
-.preemptivo{
-    background-color: hsla(from var(--cor-destaque) h s l / 0.2);
-    border: 2px solid var(--cor-destaque);
+.preemptivo {
+  background-color: hsla(from var(--cor-destaque) h s l / 0.2);
+  border: 2px solid var(--cor-destaque);
 }
 
-a.escolha:hover{
-    background-color: hsla(from var(--cor-destaque) h s l / 0.4);
-    box-shadow: 0px 0px 100px 1px hsla(from var(--cor-destaque) h s l / 0.4);
-    transform: scale(1.05);
-}
-    
-main.escalonador{
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-auto-rows: auto;
-    grid-template-areas: none;
+a.escolha:hover {
+  background-color: hsla(from var(--cor-destaque) h s l / 0.4);
+  box-shadow: 0px 0px 100px 1px hsla(from var(--cor-destaque) h s l / 0.4);
+  transform: scale(1.05);
 }
 
-.conteudo{
-    margin: 0;
-    padding: 1rem;
-    background-color: hsla(from var(--cor-base) h l s / 0.2);
-    color: var(--cor-texto-corpo);
-    border: 2px solid var(--cor-base);
-    text-align: justify;
-    justify-items: center;
+main.escalonador {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-auto-rows: auto;
+  grid-template-areas: none;
 }
 
-#gantt-chart{
+.conteudo {
+  margin: 0;
+  padding: 1rem;
+  background-color: hsla(from var(--cor-base) h l s / 0.2);
+  color: var(--cor-texto-corpo);
+  border: 2px solid var(--cor-base);
+  text-align: justify;
+  justify-items: center;
+}
+
+.config {
+  display: grid;
+  gap: .5rem;
+  align-content: center;
+  justify-content: center;
+}
+
+#gantt-chart {
   width: 100%;
   display: block;
 }
 
-footer{
-    color: var(--cor-texto);
-    background-color: var(--cor-base);
-    display: grid;
-    grid-template-columns: 1f 1f 1f;
-    grid-template-rows: 100%;
-    grid-auto-flow: column;
-    padding: 20px;
-    gap: 20px;
-    box-shadow: 0px 0px 80px 15px var(--cor-base);
-    border-top: 2px solid hsl(from var(--cor-texto) h s l / .7);
+footer {
+  color: var(--cor-texto);
+  background-color: var(--cor-base);
+  display: grid;
+  grid-template-columns: 1f 1f 1f;
+  grid-template-rows: 100%;
+  grid-auto-flow: column;
+  padding: 20px;
+  gap: 20px;
+  box-shadow: 0px 0px 80px 15px var(--cor-base);
+  border-top: 2px solid hsl(from var(--cor-texto) h s l / .7);
 }
 
 footer a {
-    color: var(--cor-link);
+  color: var(--cor-link);
 }
 
 
 /* ============================================================= */
 .entradas {
-    width: 250px;            
-    padding: 6px 10px;
+  width: 250px;
+  padding: 6px 10px;
 }
 
 /* Estilo da Tabela de Agendamento, Tabela de Médias Globais e Componentes Relacionados */
 
-table  {
-    background-color: white;
-    border: 1px solid black;
-    text-align: center;
-    border-collapse: collapse;
+table {
+  background-color: hsl(0, 0%, 100%);
+  border: 1px solid hsl(0, 0%, 0%);
+  text-align: center;
+  border-collapse: collapse;
 
-    th,td {
-        border: 1px solid #AAAAAA;
-        padding: 7px 7px;
-        font-size: 18px;
-    };
+  th,
+  td {
+    border: 1px solid hsl(0, 0%, 0%);
+    padding: 7px 7px;
+    font-size: 18px;
+  }
+
+  ;
 }
 
 .tabela-mediasglobais {
-    margin-top: 32px;
-    margin-left: 73%;
+  margin-top: 32px;
+  margin-left: 73%;
 
-    td {
-        width: 50px;
-    }
+  td {
+    width: 50px;
+  }
 }
 
 .btn {
-    padding: 10px;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    color: white;
-}
-.btn-adicionar {
-    background-color: green;
-}
-
-.btn-remover {
-    background-color: red;
+  border: 2px solid hsl(from var(--cor-texto-corpo) h l s);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: hsl(from var(--cor-texto-corpo));
+  background-color: hsla(from var(--cor-base) h l s / 0.2);
+  transition: transform 0.2s ease;
 }
 
-.btn-simular {
-    background-color: blue;
+.btn-adicionar:hover {
+  background-color: hsl(120, 100%, 25%, 0.4);
+  box-shadow: 0px 0px 100px 1px hsl(120, 100%, 25%, 0.4);
+  transform: scale(1.05);
+}
+
+.btn-remover:hover {
+  background-color: hsl(0, 100%, 50%, 0.4);
+  box-shadow: 0px 0px 100px 1px hsl(0, 100%, 50%, 0.4);
+  transform: scale(1.05);
+}
+
+.btn-simular:hover {
+  background-color: hsl(240, 100%, 50%, 0.4);
+  box-shadow: 0px 0px 100px 1px hsl(240, 100%, 50%, 0.4);
+  transform: scale(1.05);
 }

@@ -36,16 +36,12 @@
       <label for="tempoChegada">Tempo de Chegada:</label>
       <input type="number" name="tempoChegada" class="entradas" id="tempoChegada" min="1" step="1"
         oninput="validity.valid||(value='');" placeholder="Digite um inteiro maior que 0.">
-      <br>
       <label for="tempoExecucao">Tempo de Execução:</label>
       <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao" min="0" step="1"
         oninput="validity.valid||(value='');" placeholder="Digite um inteiro maior que 0.">
-      <br>
       <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
       <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto"
         placeholder="0 por padrão." min="0" step="1" oninput="validity.valid||(value='');">
-      <br>
-      <br>
       <button class="btn btn-adicionar" data-algoritmo="fcfs">Adicionar Processo (+)</button>
       <button class="btn btn-remover">Remover Processo (-)</button>
       <button class="btn btn-simular" data-algoritmo="fcfs">Simular Escalonador</button>
@@ -70,7 +66,7 @@
         </tbody>
       </table>
     </div>
-    <div class="conteudo">
+    <div class="conteudo gantt">
       <h3>Diagrama de Gantt</h3>
       <div id="gantt-chart"></div>
     </div>
