@@ -40,7 +40,7 @@ O simulador foi construído utilizando o paradigma de **Simulação de Eventos D
 
 ### Funcionalidades Técnicas:
 * **Entradas Dinâmicas:** Permite configurar atributos por processo (ID, Tempo de Chegada, Tempo de Execução, Prioridade e Deadline).
-* **Parâmetros Globais:** Ajuste fino de `quantum` e `sobrecarga_contexto`.
+* **Parâmetros Globais:** Permite configurar o `quantum` e `sobrecarga_contexto`.
 * **Gráfico de Gantt Interativo:** Renderização visual seguindo a especificação de cores:
   * 🟩 Verde: Execução de Processo.
   * 🟥 Vermelho: Sobrecarga de Contexto.
