@@ -173,7 +173,6 @@ function ganttChart(processes, scheduler) {
           return [];
         }
         deadlineIds.push(proc[0]);
-        console.log(deadlineIds)
         return [
           {
             value: proc[1],
@@ -278,6 +277,5 @@ btnSimulate.addEventListener('click', function (e) {
 
   upadateProcessTable(processTable, resultadoTabela);
   upadateMetricTable(resultadoMetricasGlobais);
-  console.log(resultadoSimulacao.ganttCoordenadas)
-  ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo)
+  ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo);
 });
