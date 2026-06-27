@@ -1,7 +1,6 @@
 'use strict';
 
-// Importando escalonadores
-
+//================ Importação dos Escalonadores ================
 import { fcfs } from './escalonadores/fcfs.js'
 import { sjf } from './escalonadores/sjf.js';
 import { prioridade } from './escalonadores/prioridade.js';
@@ -9,9 +8,17 @@ import { robin } from './escalonadores/robin.js';
 import { edf } from './escalonadores/edf.js';
 import { proprio } from './escalonadores/proprio.js';
 
+const schedulers = {
+  "fcfs": fcfs,
+  "sjf": sjf,
+  "prioridade": prioridade,
+  "robin": robin,
+  "edf": edf,
+  "proprio": proprio
+}
 
-// Elementos da configuração do escalonador | Entradas do usuário
-
+//================ Leitura das Entradas ================
+const entradasInput = document.querySelectorAll('.entradas')
 const configuracaoEscalonador = {
   tempoChegada: null,
   tempoExecucao: null,
@@ -21,38 +28,23 @@ const configuracaoEscalonador = {
   sobrecargaContexto: null
 };
 
-const entradasInput = document.querySelectorAll('.entradas')
-
-// Atualizar os valores
-
 entradasInput.forEach(entrada => {
   entrada.addEventListener('change', function (e) {
-
     const id = e.target.id;
-
     if (id in configuracaoEscalonador) {
       configuracaoEscalonador[id] = e.target.value === '' ? null : Number(e.target.value)
     }
   })
 })
 
-///// ==========================================
-///// ----------------- TABELA -----------------
+//================ Elementos HTML ================
+const btnAddRow = document.querySelector('.btn-adicionar');
+const btnRemoveRow = document.querySelector('.btn-remover');
+const btnSimulate = document.querySelector('.btn-simular');
+const processTable = document.querySelector('.tabela-agendamento__corpo');
 
-
-// Array dos processos atuais para posterior processamento
-
-let processosTabelaInicial = [];
-
-// Elementos
-
-const adicionarProcesso = document.querySelector('.btn-adicionar');
-const removerProcesso = document.querySelector('.btn-remover');
-const simularEscalonador = document.querySelector('.btn-simular');
-const corpoTabela = document.querySelector('.tabela-agendamento__corpo');
-
-// Funções utilitárias
-
+//================ Funções utilitárias ================ 
+// função: calcula as informações para o resumo qunatitativo
 function calcularMetricasGlobais(processosCalculados, numeroPreempcoes) {
 
   // processosCalculados será o array de objetos contendo os resultados do escalonamento para cada processo
@@ -72,7 +64,6 @@ function calcularMetricasGlobais(processosCalculados, numeroPreempcoes) {
 
   const tempoTotalOcioso = tempoTotalSimulacao - somaExecucao;
   const percentualOcioso = ((tempoTotalOcioso / tempoTotalSimulacao) * 100).toFixed(2);
-
   return {
     mediaEspera,
     mediaTurnaround,
@@ -80,68 +71,38 @@ function calcularMetricasGlobais(processosCalculados, numeroPreempcoes) {
     percentualOcioso,
     numeroPreempcoes: numeroPreempcoes
   }
-
 };
 
-// HTML das filas dos processos
+// função: incrementar linhas da tabela
+function htmlTableRows(pid, chegada, execucao, deadline, prioridade, termino, espera, turnaround, deadline_ok) {
+  return `<tr>
+            <td>${pid}</td>
+            <td>${chegada}</td>
+            <td>${execucao}</td>
+            <td>${deadline}</td>
+            <td>${prioridade}</td>
+            <td>${termino}</td>
+            <td>${espera}</td>
+            <td>${turnaround}</td>
+            <td>${deadline_ok}</td>
+          </tr>`
+};
 
-function htmlProcesso(id, chegada, execucao, deadline, prioridade, termino, espera, turnaround, deadline_ok) {
-  return `
-     <tr>
-                        <td>P${id}</td>
-                        <td>${chegada}</td>
-                        <td>${execucao}</td>
-                        <td>${deadline}</td>
-                        <td>${prioridade}</td>
-                        <td>${termino}</td>
-                        <td>${espera}</td>
-                        <td>${turnaround}</td>
-                        <td>${deadline_ok}</td>
-                    </tr>
-    `
-}
-
-///// Lógica
-
-// Remove o último processo presente na tabela de agendamento
-removerProcesso.addEventListener('click', function () {
-
-  if (corpoTabela.childElementCount === 0) {
-    window.alert("Não há processos para remover!")
-    return
-  }
-  corpoTabela.lastElementChild?.remove();
-  processosTabelaInicial.pop();
-  console.log(processosTabelaInicial);
-})
-
-adicionarProcesso.addEventListener('click', function (e) {
-
-  // Impedir o processo de ser adicionado se possuir input vazio para cada tipo de escalonador
-  if (configuracaoEscalonador.tempoChegada === null || configuracaoEscalonador.tempoExecucao === null) {
-    window.alert("Erro: O Tempo de Chegada e o Tempo de Execução são obrigatórios!")
-    return
-  }
-  // Detecta o escalonador
-  const algoritmoSelecionado = e.target.dataset.algoritmo
-
-  // Essas verificações poderiam ser valores default
-  switch (algoritmoSelecionado) {
-
+// função: validar as entradas do usuário
+function schedulerValidation(scheduler){
+  switch (scheduler) {
     case "robin":
       if (configuracaoEscalonador.quantum === null || configuracaoEscalonador.quantum <= 0) {
         window.alert("Erro: O algoritmo Round Robin exige um valor válido para o Quantum!");
         return;
       }
       break;
-
     case "prioridade":
       if (configuracaoEscalonador.prioridade === null) {
         alert("Erro: Informe a Prioridade para adicionar o processo.");
         return;
       }
       break;
-
     case "edf":
       if (configuracaoEscalonador.deadline === null) {
         alert("Erro: O algoritmo EDF exige que o Deadline seja informado!");
@@ -152,126 +113,169 @@ adicionarProcesso.addEventListener('click', function (e) {
         return;
       }
       break;
-
     case "sjf":
       break;
     case "fcfs":
       break;
-
     default:
       console.error("Algoritmo desconhecido selecionado.");
       return;
   }
+};
 
-  // Se o processo a ser adicionado for o primeiro, o ID será 1.
-  // Se não for o primeiro, o id do processo a ser adicionado será o anterior incrementado por 1.
-  const processoID = corpoTabela.childElementCount === 0 ? 1 : Number(Array.from(corpoTabela.children)[Array.from(corpoTabela.children).length - 1].children[0].textContent.slice(1)) + 1;
+// função: executa o escalonador
+function execScheduler(scheduler, processes){
+  return scheduler(processes)
+}
 
-  processosTabelaInicial.push({
-    id: processoID,
-    chegada: configuracaoEscalonador.tempoChegada,
-    execucao: configuracaoEscalonador.tempoExecucao,
-    prioridade: configuracaoEscalonador.prioridade,
-    deadline: configuracaoEscalonador.deadline
-  })
+// função: atualiza a tabela de resumo quantitativo
+function upadateMetricTable(resultadoMetricasGlobais){
+  const cell = Array.from(document.querySelectorAll('.tabela-mediasglobais td'));
+  cell[0].textContent = resultadoMetricasGlobais.mediaEspera;
+  cell[1].textContent = resultadoMetricasGlobais.mediaTurnaround;
+  cell[2].textContent = resultadoMetricasGlobais.throughput;
+  cell[3].textContent = resultadoMetricasGlobais.percentualOcioso;
+  cell[4].textContent = resultadoMetricasGlobais.numeroPreempcoes;
+}
 
-  const processoStart = htmlProcesso(processoID,
+// função: atualiza a tabela de processos
+function upadateProcessTable(processTable, resultadoTabela){
+  const processTableArray = Array.from(processTable.children);
+  for (let i = 0; i < resultadoTabela.length; i++) {
+    const cell = Array.from(processTableArray[i].children);
+    cell[5].textContent = resultadoTabela[i].termino;
+    cell[6].textContent = resultadoTabela[i].espera;
+    cell[7].textContent = resultadoTabela[i].turnaround;
+    cell[8].textContent = resultadoTabela[i].deadlineOk;
+  }
+}
+
+// função: gera diagrama de gantt
+function ganttChart(processes, scheduler) {
+  let deadlineIds = []
+  Highcharts.chart('gantt-chart', {
+    chart: {
+      type: 'gantt',
+      backgroundColor: 'hsl(0, 0%, 100%)',
+      height: 400,
+      width: null
+    },
+    title: {
+      text: scheduler.toUpperCase()
+    },
+    xAxis: {
+      min: 0,
+      max: processes.at(-1)[2], // tempo final do último da lista 
+      tickInterval: 5,
+      gridLineWidth: 1,
+      plotLines: processes.flatMap(proc => {
+        if (!proc[4] || deadlineIds.includes(proc[0])) {
+          return [];
+        }
+        deadlineIds.push(proc[0]);
+        return [
+          {
+            value: proc[1],
+            color: 'red',
+            width: 2,
+            zIndex: 5
+          }
+        ];
+      })
+    },
+    yAxis: {
+      title: '',
+      categories: Array.from(new Set(processes.map(proc => `ID: ${proc[0]}`))),
+      gridLineWidth: 1
+    },
+    legend: {
+      enabled: false,
+    },
+    plotOptions: {
+      series: {
+        pointPadding: 0.1,
+        groupPadding: 0.1
+      }
+    },
+    series: [{
+      name: scheduler.toUpperCase(),
+      data: processes.flatMap(proc => [
+        {
+          name: (!proc[4]) ? ((!proc[3]) ? `ID: ${proc[0]}` : 'Troca de Contexto (Sobrecarga)') : `ID: ${proc[0]} - Fora do Prazo`,
+          start: proc[1],
+          end: proc[2],
+          y: proc[0] - 1, // primeira linha = 0
+          color: (!proc[4]) ? ((!proc[3]) ? 'green' : 'red') : 'gray'
+        }
+      ])
+    }],
+    tooltip: {
+      formatter: function () {
+        return '<b>' + this.point.name + '</b><br/>' +
+          'Início: ' + this.point.start + '<br/>' +
+          'Fim: ' + this.point.end;
+      }
+    },
+    credits: {
+      enabled: false
+    }
+  });
+}
+
+//================ Event Listeners ================ 
+let processArray = [];
+
+// evento: remove linha da tabela
+btnRemoveRow.addEventListener('click', function () {
+  // trocar isso por uma indicação visual via css
+  // if (processTable.childElementCount === 0) {
+  //   window.alert("Não há processos para remover!")
+  //   return
+  // }
+  processTable.lastElementChild?.remove();
+  processArray.pop();
+})
+
+// evento: adiciona linha na tabela
+btnAddRow.addEventListener('click', function (e) {
+  if (configuracaoEscalonador.tempoChegada === null || configuracaoEscalonador.tempoExecucao === null) {
+    window.alert("Erro: O Tempo de Chegada e o Tempo de Execução são obrigatórios!")
+    return
+  }
+
+  schedulerValidation(e.target.dataset.algoritmo);
+  let pid = processArray.length + 1;
+
+  processArray.push([pid,
+    configuracaoEscalonador.tempoChegada,
+    configuracaoEscalonador.tempoExecucao,
+    configuracaoEscalonador.prioridade,
+    configuracaoEscalonador.deadline,
+    configuracaoEscalonador.quantum])
+
+  const processoStart = htmlTableRows(pid,
     configuracaoEscalonador.tempoChegada,
     configuracaoEscalonador.tempoExecucao,
     configuracaoEscalonador.deadline || '-',
     configuracaoEscalonador.prioridade || '-',
     '-', '-', '-', '-');
 
-  corpoTabela.insertAdjacentHTML('beforeend', processoStart);
-
-  console.log(processosTabelaInicial);
-
+  processTable.insertAdjacentHTML('beforeend', processoStart);
 })
 
-// Acionar simulação do escalonamento 
-
-simularEscalonador.addEventListener('click', function (e) {
-
-  // Guard clause para impedir a simulação sem processos
-  if (processosTabelaInicial.length === 0) {
-    alert("Adicione pelo menos um processo para simular!");
+// evento: simula escalonador 
+btnSimulate.addEventListener('click', function (e) {
+  if (processArray.length === 0) {
+    alert("Adicione pelo menos um processo para simular!"); // to do: trocar essa guard clause por uma indicação visaul via css e bloquear o botao
     return;
   }
+  const resultadoSimulacao = execScheduler(schedulers[e.target.dataset.algoritmo], processArray);
 
-  const algoritmoSelecionado = e.target.dataset.algoritmo
+  let resultadoTabela = resultadoSimulacao.tabelaFinal;
+  resultadoTabela = resultadoTabela.toSorted((a, b) => a.pid - b.pid);
+  const resultadoMetricasGlobais = calcularMetricasGlobais(resultadoTabela, resultadoSimulacao.numeroPreempcoes)
 
-  const processosParaAlgoritmo = processosTabelaInicial.map(proc => {
-    return [
-      proc.id,
-      proc.chegada,
-      proc.execucao,
-      proc.deadline ?? Infinity,
-      proc.prioridade ?? 0
-    ];
-  });
-
-  const sobrecarga = configuracaoEscalonador.sobrecargaContexto || 0;
-  const quantum = configuracaoEscalonador.quantum || 2;
-  let resultadoSimulacao
-
-  // Coletar resultados do escalonamento a depender do algoritmo selecionado
-
-  switch (algoritmoSelecionado) {
-    case 'sjf':
-      resultadoSimulacao = sjf(processosParaAlgoritmo, sobrecarga);
-      break;
-    case 'robin':
-      resultadoSimulacao = robin(processosParaAlgoritmo, quantum, sobrecarga);
-      break;
-    case 'edf':
-      resultadoSimulacao = edf(processosParaAlgoritmo, quantum, sobrecarga);
-      break
-  }
-
-  const linhasHtml = Array.from(corpoTabela.children);
-  const celulasMetricasGlobais = Array.from(document.querySelectorAll('.tabela-mediasglobais td'));
-
-  const resultadoTabela = resultadoSimulacao.tabelaFinal;
-
-  // Ordena os resultados pelo atributo do ID
-  const resultadoTabelaOrdenado = resultadoTabela.toSorted((a, b) => a.pid - b.pid);
-  console.log(resultadoTabelaOrdenado)
-
-  // Calcular métricas globais
-  const numeroPreempcoes = resultadoSimulacao.numeroPreempcoes;
-  const resultadoMetricasGlobais = calcularMetricasGlobais(resultadoTabelaOrdenado, numeroPreempcoes)
-
-  console.log(resultadoMetricasGlobais)
-
-  // Atualizar os dados individuais de cada processo após a simulação
-
-  for (let i = 0; i < resultadoTabelaOrdenado.length; i++) {
-
-    const conteudoLinhaAtual = Array.from(linhasHtml[i].children)
-
-    // Adiciona tempo de término na linha do processo
-    conteudoLinhaAtual[5].textContent = resultadoTabelaOrdenado[i].termino
-
-    // Tempo de espera
-    conteudoLinhaAtual[6].textContent = resultadoTabelaOrdenado[i].espera
-
-    // Turnaround individual do processo
-    conteudoLinhaAtual[7].textContent = resultadoTabelaOrdenado[i].turnaround
-
-    // Deadline_ok?
-    conteudoLinhaAtual[8].textContent = resultadoTabelaOrdenado[i].deadlineOk
-
-  }
-
-  // Inserir as métricas globais na tabela menor
-
-  celulasMetricasGlobais[0].textContent = resultadoMetricasGlobais.mediaEspera
-  celulasMetricasGlobais[1].textContent = resultadoMetricasGlobais.mediaTurnaround
-  celulasMetricasGlobais[2].textContent = resultadoMetricasGlobais.throughput
-  celulasMetricasGlobais[3].textContent = resultadoMetricasGlobais.percentualOcioso
-  celulasMetricasGlobais[4].textContent = resultadoMetricasGlobais.numeroPreempcoes
-
-
+  upadateProcessTable(processTable, resultadoTabela);
+  upadateMetricTable(resultadoMetricasGlobais);
+  ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo);
 });
-
-///// ==========================================

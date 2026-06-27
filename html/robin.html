@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
     rel="stylesheet" />
+
+  <script defer src="https://code.highcharts.com/gantt/highcharts-gantt.js" type="module"></script>
   <script defer src="../scripts/main.js" type="module"></script>
 </head>
 
@@ -40,11 +42,11 @@
     <div class="conteudo config">
       <h3>Configuração do Escalonador</h3>
       <label for="tempoChegada">Tempo de Chegada:</label>
-      <input type="number" name="tempoChegada" class="entradas" id="tempoChegada" min="1" step="1"
-        oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
+      <input type="number" name="tempoChegada" class="entradas" id="tempoChegada" min="0" step="1"
+        oninput="validity.valid || (value = '')" placeholder="Digite um número inteiro positivo." />
       <br />
       <label for="tempoExecucao">Tempo de Execução:</label>
-      <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao" min="0" step="1"
+      <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao" min="1" step="1"
         oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
       <br />
       <label for="quantum">Quantum:</label>
@@ -108,9 +110,7 @@
     </div>
     <div class="conteudo gantt">
       <h3>Diagrama de Gantt</h3>
-    </div>
-    <div class="conteudo grafico">
-      <h3>Grafico de Desempenho</h3>
+      <div id="gantt-chart"></div>
     </div>
   </main>
   <footer>
