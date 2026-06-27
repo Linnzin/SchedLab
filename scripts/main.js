@@ -150,6 +150,79 @@ function upadateProcessTable(processTable, resultadoTabela){
   }
 }
 
+// função: gera diagrama de gantt
+function ganttChart(processes, scheduler) {
+  let deadlineIds = []
+  Highcharts.chart('gantt-chart', {
+    chart: {
+      type: 'gantt',
+      backgroundColor: 'hsl(0, 0%, 100%)',
+      height: 400,
+      width: null
+    },
+    title: {
+      text: scheduler.toUpperCase()
+    },
+    xAxis: {
+      min: 0,
+      max: processes.at(-1)[2], // tempo final do último da lista 
+      tickInterval: 5,
+      gridLineWidth: 1,
+      plotLines: processes.flatMap(proc => {
+        if (!proc[4] || deadlineIds.includes(proc[0])) {
+          return [];
+        }
+        deadlineIds.push(proc[0]);
+        console.log(deadlineIds)
+        return [
+          {
+            value: proc[1],
+            color: 'red',
+            width: 2,
+            zIndex: 5
+          }
+        ];
+      })
+    },
+    yAxis: {
+      title: '',
+      categories: Array.from(new Set(processes.map(proc => `ID: ${proc[0]}`))),
+      gridLineWidth: 1
+    },
+    legend: {
+      enabled: false,
+    },
+    plotOptions: {
+      series: {
+        pointPadding: 0.1,
+        groupPadding: 0.1
+      }
+    },
+    series: [{
+      name: scheduler.toUpperCase(),
+      data: processes.flatMap(proc => [
+        {
+          name: (!proc[4]) ? ((!proc[3]) ? `ID: ${proc[0]}` : 'Troca de Contexto (Sobrecarga)') : `ID: ${proc[0]} - Fora do Prazo`,
+          start: proc[1],
+          end: proc[2],
+          y: proc[0] - 1, // primeira linha = 0
+          color: (!proc[4]) ? ((!proc[3]) ? 'green' : 'red') : 'gray'
+        }
+      ])
+    }],
+    tooltip: {
+      formatter: function () {
+        return '<b>' + this.point.name + '</b><br/>' +
+          'Início: ' + this.point.start + '<br/>' +
+          'Fim: ' + this.point.end;
+      }
+    },
+    credits: {
+      enabled: false
+    }
+  });
+}
+
 //================ Event Listeners ================ 
 let processArray = [];
 
@@ -205,4 +278,6 @@ btnSimulate.addEventListener('click', function (e) {
 
   upadateProcessTable(processTable, resultadoTabela);
   upadateMetricTable(resultadoMetricasGlobais);
+  console.log(resultadoSimulacao.ganttCoordenadas)
+  ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo)
 });
