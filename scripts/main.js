@@ -51,7 +51,6 @@ function calcularMetricasGlobais(processosCalculados, numeroPreempcoes) {
   // numeroPreempcoes será uma das saídas de cada algoritmo
 
   const totalProcessos = processosCalculados.length
-
   const somaEspera = processosCalculados.reduce((acc, p) => acc + p.espera, 0)
   const somaTurnaround = processosCalculados.reduce((acc, p) => acc + p.turnaround, 0);
   const somaExecucao = processosCalculados.reduce((acc, p) => acc + p.execucao, 0);
@@ -185,7 +184,7 @@ function ganttChart(processes, scheduler) {
     },
     yAxis: {
       title: '',
-      categories: Array.from(new Set(processes.map(proc => `ID: ${proc[0]}`))),
+      categories: Array.from({ length: Math.max(...processes.map(p => p[0])) }, (_, i) => `ID: ${i + 1}`),
       gridLineWidth: 1
     },
     legend: {

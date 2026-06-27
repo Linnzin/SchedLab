@@ -1,21 +1,41 @@
-export function fcfs(arrayProcessos) {
-  arrayProcessos.sort((a, b) => (a[1] ?? 0) - (b[1] ?? 0))
+// processArray -> [[pid, tempoDeChegada, duração, prioridade, deadline, quantum, sobrecarga]]
+export function fcfs(processArray) {
 
-  let ganttCoordenadas = []; //[pid, inicio, fim]
-  for (let i = 0; i < arrayProcessos.length; i++) {
-    let idProcesso = arrayProcessos[i][0];
+  // ordena os processos por ordem de chegada
+  const orderedProcessArray = processArray.sort((a, b) => (a[1] ?? 0) - (b[1] ?? 0))
 
+  // ====== ganttCoordenadas ======
+  let ganttCoordenadas = []; //[[pid, inicio, fim]]
+  for (let i = 0; i < orderedProcessArray.length; i++) {
+    let processId = orderedProcessArray[i][0];
     let inicioProcesso = (i == 0) ? 0 : ganttCoordenadas[i - 1][2];
-    inicioProcesso = (arrayProcessos[i][1] > inicioProcesso) ? arrayProcessos[i][1] : inicioProcesso;
+    inicioProcesso = (orderedProcessArray[i][1] > inicioProcesso) ? orderedProcessArray[i][1] : inicioProcesso;
+    let fimProcesso = inicioProcesso + orderedProcessArray[i][2];
 
-    let fimProcesso = inicioProcesso + arrayProcessos[i][2];
-
-    ganttCoordenadas.push([idProcesso, inicioProcesso, fimProcesso, false, false])
+    ganttCoordenadas.push([processId, inicioProcesso, fimProcesso, false, false])
+  }
+  
+  // ====== tabelaFinal ======
+  let tabelaFinal = []; //[{pid, chegada, execucao, deadline, prioridade, termino, espera, turnaround, deadlineOk}]
+  for (let i = 0; i < processArray.length; i++) {
+    // encontra o processo em questão na lista das coordenadas do diagrama de gantt
+    let scheduledProcess = ganttCoordenadas.find(proc => proc[0] === processArray[i][0]);
+    
+    tabelaFinal.push({
+      pid: processArray[i][0],
+      chegada: processArray[i][1],
+      execucao: processArray[i][2],
+      deadline: '-',
+      prioridade: '-',
+      termino: scheduledProcess[2],
+      espera: (scheduledProcess[2] - processArray[i][1]) - processArray[i][2],
+      turnaround: scheduledProcess[2] - processArray[i][1],
+      deadlineOk: '-'
+    })
   }
 
-  let tabelaFinal = [];
-
-  const numeroPreempcoes = 0 // fcfs não é preemptivo
+  // ====== numeroPreempcoes ======
+  const numeroPreempcoes = 0; // fcfs não é preemptivo
 
   return {tabelaFinal, ganttCoordenadas, numeroPreempcoes}
 }

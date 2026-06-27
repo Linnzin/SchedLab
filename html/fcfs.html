@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
   <script defer src="https://code.highcharts.com/gantt/highcharts-gantt.js" type="module"></script>
   <script defer src="../scripts/main.js" type="module"></script>
 </head>
-
 <body>
   <header>
     <a href="../index.html">Escalonadores</a>
@@ -39,9 +37,6 @@
       <label for="tempoExecucao">Tempo de Execução:</label>
       <input type="number" name="tempoExecucao" class="entradas" id="tempoExecucao" min="1" step="1"
         oninput="validity.valid||(value='');" placeholder="Digite um inteiro maior que 0.">
-      <label for="sobrecargaContexto">Sobrecarga de Contexto:</label>
-      <input type="number" name="sobrecargaContexto" class="entradas" id="sobrecargaContexto"
-        placeholder="0 por padrão." min="0" step="1" oninput="validity.valid||(value='');">
       <button class="btn btn-adicionar" data-algoritmo="fcfs">Adicionar Processo (+)</button>
       <button class="btn btn-remover">Remover Processo (-)</button>
       <button class="btn btn-simular" data-algoritmo="fcfs">Simular Escalonador</button>
@@ -64,6 +59,28 @@
         </thead>
         <tbody class="tabela-agendamento__corpo">
         </tbody>
+        <table class="tabela-mediasglobais">
+        <tr>
+          <th>Tempo de espera médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Tempo de Turnaround médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Throughput</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>% de CPU Ociosa</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Número de preempções</th>
+          <td>0</td>
+        </tr>
+      </table>
       </table>
     </div>
     <div class="conteudo gantt">
@@ -89,5 +106,4 @@
     </div>
   </footer>
 </body>
-
 </html>
