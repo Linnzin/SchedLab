@@ -117,13 +117,6 @@ main.escalonador {
   justify-items: center;
 }
 
-.config {
-  display: grid;
-  gap: .5rem;
-  align-content: center;
-  justify-content: center;
-}
-
 #gantt-chart {
   width: 100%;
   display: block;

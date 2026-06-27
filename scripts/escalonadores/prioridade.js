@@ -1,3 +1,3 @@
-export function prioridade() {
+export function prioridade(processArray) {
   return null
 }
