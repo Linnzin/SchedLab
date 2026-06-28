@@ -23,9 +23,7 @@
   <main class="escalonador">
     <div class="conteudo explicacao">
       <h3>Prioridade</h3>
-      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quisquam doloribus modi cumque obcaecati rem
-        reprehenderit sequi in harum temporibus nam optio cum architecto similique provident, nesciunt odio repudiandae
-        commodi eligendi.</p>
+      <p>O algoritmo de Prioridade é um método estático amplamente utilizado em sistemas operacionais e servidores para garantir que tarefas de missão crítica tenham preferência absoluta sobre processos secundários de segundo plano. Ele funciona associando um peso de urgência a cada tarefa, adotando a convenção clássica onde o <strong>menor valor numérico indica a maior prioridade</strong> (ou seja, um processo com prioridade 1 passa na frente de um com prioridade 5). Por ser não-preemptivo nesta implementação, uma vez que um processo assume o controle do processador, ele executa continuamente até o seu término, utilizando o critério FCFS (ordem de chegada) estritamente como regra de desempate caso duas tarefas idênticas aguardem na fila. Sua grande vantagem é a previsibilidade e a facilidade de blindar funções vitais do sistema, mas sua principal desvantagem é o risco de inanição (starvation), cenário onde processos menos urgentes podem ficar retidos indefinidamente se novas demandas prioritárias não pararem de surgir. É aplicado idealmente em ambientes corporativos e gerenciais onde a hierarquia e o controle rígido sobre a importância das tarefas são mais relevantes do que o cumprimento dinâmico de prazos de tempo real.</p>
     </div>
     <div class="conteudo config">
       <h3>Configuração do Escalonador</h3>
@@ -68,6 +66,29 @@
         </thead>
         <tbody class="tabela-agendamento__corpo">
         </tbody>
+      </table>
+
+      <table class="tabela-mediasglobais">
+        <tr>
+          <th>Tempo de espera médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Tempo de Turnaround médio</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Throughput</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>% de CPU Ociosa</th>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Número de preempções</th>
+          <td>0</td>
+        </tr>
       </table>
     </div>
     <div class="conteudo gantt">
