@@ -1,18 +1,18 @@
-export function sjf(arrayProcessos) {
+export function sjf(processArray) {
 
   // Formato esperado para cada um dos processos: [PID, Chegada, Execução, Deadline, Prioridade]
-  let processosRestantes = arrayProcessos.map(p => {
+  let processosRestantes = processArray.map(p => {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
     let execucao = p.execucao ?? p[2];
-    let deadline = p.deadline ?? Infinity;
+    let deadline = p.deadline ?? p[3]; 
     let prioridade = p.prioridade ?? p[4];
 
     return {
       pid: pid,
       chegada: Number(chegada) || 0,
       execucao: Number(execucao) || 0,
-      deadline: Number(deadline),
+      deadline: (!deadline || deadline === '-') ? Infinity : Number(deadline),
       prioridade: Number(prioridade) || 0
     };
   });
