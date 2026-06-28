@@ -88,7 +88,7 @@ export function edf(arrayProcessos) {
       if (sobrecarga > 0) {
         ganttCoordenadas.push([ultimoPid, tempoAtual, tempoAtual + sobrecarga, false, true, false]);
         tempoAtual += sobrecarga;
-        ultimoTempoPorProcesso[escolhido_pid] += sobrecarga;
+        ultimoTempoPorProcesso[ultimoPid] += sobrecarga;
         verificarChegadas(tempoAtual);
         // Após a sobrecarga, pode ser que novos processos tenham chegado,
         // mas o escolhido permanece (já foi retirado da fila). 
