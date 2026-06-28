@@ -250,7 +250,8 @@ btnAddRow.addEventListener('click', function (e) {
     configuracaoEscalonador.tempoExecucao,
     configuracaoEscalonador.prioridade,
     configuracaoEscalonador.deadline,
-    configuracaoEscalonador.quantum])
+    configuracaoEscalonador.quantum,
+    configuracaoEscalonador.sobrecargaContexto])
 
   const processoStart = htmlTableRows(pid,
     configuracaoEscalonador.tempoChegada,

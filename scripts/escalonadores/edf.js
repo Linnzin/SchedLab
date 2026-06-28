@@ -1,12 +1,17 @@
-export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
+export function edf(arrayProcessos) {
+  // Define quantum e sobrecarga a partir do ultimo processo
+  let ultimoProcesso = arrayProcessos[arrayProcessos.length - 1];
+
+  let quantum = Math.max(1, Number(ultimoProcesso?.[5]) || 1);
+  let sobrecarga = Number(ultimoProcesso?.[6]) || 0;
 
   // Converte entradas (suporta array ou objeto)
   let processosNaoChegados = arrayProcessos.map(p => {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
     let execucao = p.execucao ?? p[2];
-    let deadline = p.deadline ?? p[3];
-    let prioridade = p.prioridade ?? p[4];
+    let prioridade = p.prioridade ?? p[3];
+    let deadline = p.deadline ?? p[4];    
 
     let deadlineTratado = (deadline === "" || deadline === "-" || deadline === null || deadline === undefined)
       ? Infinity
@@ -35,11 +40,14 @@ export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
 
   let ultimoPid = null;
   let ultimoPreemptado = false;   // indica se o último processo foi preemptado
+  let ultimoTempoPorProcesso = {} // ultimo instante em que cada processo saiu da CPU
 
   // Função para mover processos que já chegaram para a fila de prontos
   const verificarChegadas = (tempo) => {
     while (processosNaoChegados.length > 0 && processosNaoChegados[0].chegada <= tempo) {
-      filaProntos.push(processosNaoChegados.shift());
+      let p = processosNaoChegados.shift()
+      filaProntos.push(p);
+      ultimoTempoPorProcesso[p.pid] = p.chegada;
     }
   };
 
@@ -62,7 +70,7 @@ export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
     if (filaProntos.length === 0) {
       let proximoProcesso = processosNaoChegados[0];
       if (!proximoProcesso) break; // segurança
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada]);
+      ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada, false, false, false]);
       tempoAtual = proximoProcesso.chegada;
       ultimoPid = null;
       ultimoPreemptado = false;
@@ -71,14 +79,22 @@ export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
 
     // Escolhe o processo com menor deadline
     let escolhido = escolherPorDeadline();
+    let escolhido_pid = escolhido.pid;
+
+    // Bloco de espera
+    // define tempo de espera a partir do tempo atual e do ultimo registro
+    if (tempoAtual > ultimoTempoPorProcesso[escolhido_pid]){
+      ganttCoordenadas.push([escolhido_pid, ultimoTempoPorProcesso[escolhido_pid],tempoAtual, 
+        true, false, false])
+    }
 
     // ============================================================
     // SÓ APLICA SOBRECARGA SE O ÚLTIMO PROCESSO FOI PREEMPTADO
     // ============================================================
     if (ultimoPid !== null && ultimoPreemptado) {
-      if (sobrecargaContexto > 0) {
-        ganttCoordenadas.push(["Sobrecarga", tempoAtual, tempoAtual + sobrecargaContexto]);
-        tempoAtual += sobrecargaContexto;
+      if (sobrecarga > 0) {
+        ganttCoordenadas.push(["Sobrecarga", tempoAtual, tempoAtual + sobrecarga, false, true, false]);
+        tempoAtual += sobrecarga;
         verificarChegadas(tempoAtual);
         // Após a sobrecarga, pode ser que novos processos tenham chegado,
         // mas o escolhido permanece (já foi retirado da fila). 
@@ -103,7 +119,7 @@ export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
     let termino = inicioExecucao + tempoExecutado;
 
     // Registra o bloco no Gantt
-    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino]);
+    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, false]);
 
     // Avança o tempo e desconta o que rodou
     tempoAtual = termino;
@@ -111,6 +127,9 @@ export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
 
     // Verifica se novos processos chegaram durante a execução
     verificarChegadas(tempoAtual);
+
+    // atualiza ultimo dempo do processo
+    ultimoTempoPorProcesso[escolhido_pid] = termino
 
     // Atualiza estado do processo
     if (escolhido.tempoRestante > 0) {
@@ -143,7 +162,7 @@ export function edf(arrayProcessos, quantum = 2, sobrecargaContexto = 0) {
       pid: p.pid,
       chegada: p.chegada,
       execucao: p.execucao,
-      deadline: p.deadline,
+      deadline: p.deadline === Infinity ? '-' : p.deadline,
       prioridade: p.prioridade,
       termino: p.termino,
       espera: espera,
