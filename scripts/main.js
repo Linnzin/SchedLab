@@ -133,7 +133,7 @@ function upadateMetricTable(resultadoMetricasGlobais) {
   cell[0].textContent = resultadoMetricasGlobais.mediaEspera;
   cell[1].textContent = resultadoMetricasGlobais.mediaTurnaround;
   cell[2].textContent = resultadoMetricasGlobais.throughput;
-  cell[3].textContent = resultadoMetricasGlobais.percentualOcioso;
+  cell[3].textContent = `${resultadoMetricasGlobais.percentualOcioso}%`;
   cell[4].textContent = resultadoMetricasGlobais.numeroPreempcoes;
 }
 
@@ -218,7 +218,7 @@ function ganttChart(processArray, scheduler) {
     },
     xAxis: {
       min: 0,
-      max: processArray.at(-1)[2], // tempo final do último da lista 
+      max: Math.max(...processArray.map(proc => proc[2])),
       lineWidth: 1,
       lineColor: 'var(--cor-texto-main)',
       tickInterval: 5,
