@@ -151,36 +151,36 @@ function upadateProcessTable(processTable, resultadoTabela){
 
 // função: gera diagrama de gantt
 function ganttChart(ganttData, schedulerName) {
-  // ganttData = array de [pid, inicio, fim, espera, sobrecarga, deadline]
-
   if (!ganttData || ganttData.length === 0) {
     console.warn("Sem dados para o gráfico Gantt.");
     return;
   }
 
-  // Tempo máximo da simulação
-  const maxTime = Math.max(...ganttData.map(bloco => bloco[2]));
+  // Log para depuração (verifique no console)
+  console.log('Dados do Gantt:', ganttData);
 
-  // Categorias do eixo Y: PIDs únicos (inclui "Ocioso" e "Sobrecarga" se existirem)
-  const pids = [...new Set(ganttData.map(bloco => bloco[0]))];
+  const maxTime = Math.max(...ganttData.map(b => b[2]));
+
+  // Extrai PIDs únicos (inclui "Ocioso" se houver, mas vamos filtrar para evitar categorias estranhas)
+  const pids = [...new Set(ganttData.map(b => b[0]))];
   const categories = pids.map(pid => `P${pid}`);
 
-  // Monta os dados da série com cores baseadas nas flags
-  const seriesData = ganttData.map(bloco => {
-    const [pid, inicio, fim, espera, sobrecarga, deadline] = bloco;
-
+  const seriesData = ganttData.map(b => {
+    const [pid, inicio, fim, espera, sobrecarga, deadline] = b;
     let color, name;
+
+    // Ordem de prioridade: Ocioso > Sobrecarga > Espera > Deadline > Execução
     if (pid === "Ocioso") {
       color = '#cccccc';
       name = 'Ocioso';
-    } else if (pid === "Sobrecarga") {
-      color = '#ff9999';
-      name = 'Sobrecarga';
+    } else if (sobrecarga) {
+      color = '#ff9999'; // vermelho
+      name = `P${pid} (sobrecarga)`;
     } else if (espera) {
       color = '#ffcc66'; // amarelo
       name = `P${pid} (espera)`;
     } else if (deadline) {
-      color = '#999999'; // cinza (fora do prazo)
+      color = '#999999'; // cinza
       name = `P${pid} (fora do prazo)`;
     } else {
       color = '#66cc66'; // verde (execução)
@@ -203,24 +203,19 @@ function ganttChart(ganttData, schedulerName) {
       backgroundColor: '#ffffff',
       height: 400
     },
-    title: {
-      text: schedulerName.toUpperCase()
-    },
+    title: { text: schedulerName.toUpperCase() },
     xAxis: {
       min: 0,
       max: maxTime,
       tickInterval: 5,
       gridLineWidth: 1
-      // plotLines removidas porque a lógica antiga estava incorreta
     },
     yAxis: {
       title: '',
       categories: categories,
       gridLineWidth: 1
     },
-    legend: {
-      enabled: false
-    },
+    legend: { enabled: false },
     plotOptions: {
       series: {
         pointPadding: 0.1,
@@ -236,9 +231,7 @@ function ganttChart(ganttData, schedulerName) {
         return `<b>${this.point.name}</b><br/>Início: ${this.point.start}<br/>Fim: ${this.point.end}`;
       }
     },
-    credits: {
-      enabled: false
-    }
+    credits: { enabled: false }
   });
 }
 

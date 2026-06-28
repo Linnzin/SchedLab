@@ -81,20 +81,14 @@ export function edf(arrayProcessos) {
     let escolhido = escolherPorDeadline();
     let escolhido_pid = escolhido.pid;
 
-    // Bloco de espera
-    // define tempo de espera a partir do tempo atual e do ultimo registro
-    if (tempoAtual > ultimoTempoPorProcesso[escolhido_pid]){
-      ganttCoordenadas.push([escolhido_pid, ultimoTempoPorProcesso[escolhido_pid],tempoAtual, 
-        true, false, false])
-    }
-
     // ============================================================
     // SÓ APLICA SOBRECARGA SE O ÚLTIMO PROCESSO FOI PREEMPTADO
     // ============================================================
     if (ultimoPid !== null && ultimoPreemptado) {
       if (sobrecarga > 0) {
-        ganttCoordenadas.push(["Sobrecarga", tempoAtual, tempoAtual + sobrecarga, false, true, false]);
+        ganttCoordenadas.push([ultimoPid, tempoAtual, tempoAtual + sobrecarga, false, true, false]);
         tempoAtual += sobrecarga;
+        ultimoTempoPorProcesso[escolhido_pid] += sobrecarga;
         verificarChegadas(tempoAtual);
         // Após a sobrecarga, pode ser que novos processos tenham chegado,
         // mas o escolhido permanece (já foi retirado da fila). 
@@ -103,6 +97,15 @@ export function edf(arrayProcessos) {
         // Isso é aceitável, pois a sobrecarga é um custo fixo.
       }
     }
+
+    // Bloco de espera
+    // define tempo de espera a partir do tempo atual e do ultimo registro
+    if (tempoAtual > ultimoTempoPorProcesso[escolhido_pid]){
+      ganttCoordenadas.push([escolhido_pid, ultimoTempoPorProcesso[escolhido_pid],tempoAtual, 
+        true, false, false])
+    }
+
+
 
     // Define o quanto o processo vai executar:
     // - No máximo o quantum
