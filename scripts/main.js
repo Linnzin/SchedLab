@@ -18,7 +18,7 @@ const schedulers = {
 }
 
 //================ Leitura das Entradas ================
-const entradasInput = document.querySelectorAll('.entradas')
+const entradasInput = document.querySelectorAll('.num-input')
 const configuracaoEscalonador = {
   tempoChegada: null,
   tempoExecucao: null,
