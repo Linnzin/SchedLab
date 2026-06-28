@@ -107,6 +107,33 @@
     </div>
     <div class="conteudo gantt">
       <h3>Diagrama de Gantt</h3>
+      <div>
+        <svg id="exec" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          class="legenda-icone legenda-icone--circulo">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+        <p>Processo em Execução</p>
+        <svg id="wait" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          class="legenda-icone legenda-icone--circulo">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+        <p>Processo em Espera</p>
+        <svg id="context" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          class="legenda-icone legenda-icone--circulo">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+        <p>Troca de Contexto</p>
+        <svg id="dead" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          class="legenda-icone legenda-icone--circulo">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+        <p>Processo fora do Prazo</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a0f0f"
+          stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14" />
+        </svg>
+        <p>Deadline</p>
+      </div>
       <div id="gantt-chart"></div>
     </div>
   </main>

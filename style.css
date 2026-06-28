@@ -6,7 +6,7 @@
 
 :root {
   --cor-base-header: hsl(0, 0%, 0%);
-  --cor-base-main: hsl(0, 0%, 100%);
+  --cor-base-main: hsl(48, 100%, 98%);
   --cor-destaque: hsl(0, 100%, 50%);
 
   --cor-texto-header: hsl(from var(--cor-base-header) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100));
@@ -95,6 +95,7 @@ main {
   text-decoration: none;
 
   border: 1px solid var(--cor-texto-main);
+  border-radius: 1rem;
   color: var(--cor-texto-main);
   background-color: hsla(from var(--cor-base-header) h l s / 0.2);
   backdrop-filter: blur(1.5px);
@@ -118,18 +119,20 @@ a.escolha:hover {
   transform: scale(1.05);
 }
 
+/* ===== escalonadores ===== */
+
 main.escalonador {
   grid-template-columns: 1fr;
   grid-template-rows: auto;
   grid-auto-rows: auto;
   grid-template-areas: none;
+  gap: 2rem;
 }
-
-/* ===== escalonadores ===== */
 
 .conteudo {
   margin: 0;
   padding: 1rem;
+  border-radius: 1rem;
   
   text-align: justify;
   justify-items: center;
@@ -239,15 +242,33 @@ table {
   }
 
   td {
-    background-color: var(--cor-base-main);
+    background-color: transparent;
   }
 }
 
 .tabela-mediasglobais {
   td {
+    background-color: transparent;
     width: 50px;
   }
 }
+
+.gantt {
+  display: grid;
+  grid-template-rows: auto auto auto;
+
+  div {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+#dead { fill: hsl(0, 80%, 30%); }
+#exec { fill: hsl(140, 80%, 30%); }
+#wait { fill: hsl(60, 80%, 30%); }
+#context { fill: hsl(240, 5%, 30%); }
 
 #gantt-chart {
   width: 100%;

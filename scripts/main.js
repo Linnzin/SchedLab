@@ -42,6 +42,7 @@ const btnAddRow = document.querySelector('.btn-adicionar');
 const btnRemoveRow = document.querySelector('.btn-remover');
 const btnSimulate = document.querySelector('.btn-simular');
 const processTable = document.querySelector('.tabela-agendamento__corpo');
+const divGantt = document.querySelector('.gantt')
 
 //================ Funções utilitárias ================ 
 // função: calcula as informações para o resumo qunatitativo
@@ -153,9 +154,9 @@ function upadateProcessTable(processTable, resultadoTabela) {
 function ganttChart(processArray, scheduler) {
 
   function blockName(process) {
-    if (process[3]){ return `PID: ${process[0]} (Esperando)` }
-    if (process[4]){ `Troca de Contexto (Sobrecarga)` }
-    if (process[5]){ `PID: ${process[0]} (Fora do Prazo — Deadline Estourada)` }
+    if (process[3]) { return `PID: ${process[0]} (Esperando)` }
+    if (process[4]) { `Troca de Contexto (Sobrecarga)` }
+    if (process[5]) { `PID: ${process[0]} (Fora do Prazo — Deadline Estourada)` }
     return `PID: ${process[0]} (Execução)`
   }
 
@@ -243,7 +244,7 @@ function ganttChart(processArray, scheduler) {
         return [
           {
             value: proc[1],
-            color: 'red',
+            color: 'hsl(0, 80%, 30%)',
             width: 2,
             zIndex: 6,
           }
@@ -257,7 +258,7 @@ function ganttChart(processArray, scheduler) {
       gridLineWidth: 1
     },
     legend: {
-      enabled: false,
+      enabled: false
     },
     plotOptions: {
       series: {
@@ -266,19 +267,22 @@ function ganttChart(processArray, scheduler) {
       }
     },
     // dados para o diagrama
-    series: [{
-      name: scheduler.toUpperCase(),
-      borderWidth: 2,
-      data: processArray.flatMap(proc => [
-        {
-          name: blockName(proc),
-          start: proc[1],
-          end: proc[2],
-          y: proc[0] - 1, // primeira linha = 0
-          color: blockColor(proc),
-        }
-      ])
-    }],
+    series: [
+      {
+        name: '',
+        showInLegend: false,
+        borderWidth: 2,
+        data: processArray.flatMap(proc => [
+          {
+            name: blockName(proc),
+            start: proc[1],
+            end: proc[2],
+            y: proc[0] - 1, // primeira linha = 0
+            color: blockColor(proc),
+          }
+        ])
+      }
+    ],
     // informações que seguem o mouse
     tooltip: {
       followPointer: true,
@@ -355,4 +359,9 @@ btnSimulate.addEventListener('click', function (e) {
   upadateProcessTable(processTable, resultadoTabela);
   upadateMetricTable(resultadoMetricasGlobais);
   ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo);
+
+  divGantt.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
 });
