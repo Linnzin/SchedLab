@@ -121,8 +121,13 @@ export function edf(arrayProcessos) {
     let inicioExecucao = tempoAtual;
     let termino = inicioExecucao + tempoExecutado;
 
-    // Registra o bloco no Gantt
-    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, false]);
+    // Checa estouro de deadline e registra o bloco no gantt
+    if (escolhido.deadline !== Infinity && termino > escolhido.deadline){
+      ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, true]);
+    }
+    else {
+      ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, false]);
+    }
 
     // Avança o tempo e desconta o que rodou
     tempoAtual = termino;
@@ -131,7 +136,7 @@ export function edf(arrayProcessos) {
     // Verifica se novos processos chegaram durante a execução
     verificarChegadas(tempoAtual);
 
-    // atualiza ultimo dempo do processo
+    // atualiza ultimo tempo do processo
     ultimoTempoPorProcesso[escolhido_pid] = termino
 
     // Atualiza estado do processo
