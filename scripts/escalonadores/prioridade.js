@@ -1,23 +1,21 @@
-export function prioridade(processArray) {
+export function prioridade(arrayProcessos) {
 
   // Formato esperado para cada um dos processos: [PID, Chegada, Execução, Deadline, Prioridade]
-  let processosRestantes = processArray.map(p => {
+  let processosRestantes = arrayProcessos.map(p => {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
     let execucao = p.execucao ?? p[2];
-    let deadline = p.deadline ?? p[3]; 
-    let prioridadeInfo = p.prioridade ?? p[4];
+    let prioridade = p.prioridade ?? p[4]; 
 
     return {
       pid: pid,
       chegada: Number(chegada) || 0,
       execucao: Number(execucao) || 0,
-      deadline: (!deadline || deadline === '-') ? Infinity : Number(deadline),
-      prioridade: Number(prioridadeInfo) || 0
+      prioridade: Number(prioridade) || 0
     };
   });
 
- let tabelaFinal = [];
+  let tabelaFinal = [];
   let ganttCoordenadas = [];
   let tempoAtual = 0;
 
@@ -27,12 +25,12 @@ export function prioridade(processArray) {
 
     if (disponiveis.length === 0) {
       let proximaChegada = Math.min(...processosRestantes.map(p => p.chegada));
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false]);
+      ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false, false]);
       tempoAtual = proximaChegada;
       continue;
     }
 
-    // Ordenação por Prioridade (Menor número = Maior prioridade) e desempate feito com FCFS
+    // Ordenação por Prioridade (menor número = maior prioridade) e desempate feito com FCFS
     disponiveis.sort((a, b) => {
       if (a.prioridade !== b.prioridade) {
         return a.prioridade - b.prioridade;
@@ -42,6 +40,7 @@ export function prioridade(processArray) {
 
     let escolhido = disponiveis[0];
 
+    // Calcula os dados cronológicos do processo
     let inicioExecucao = tempoAtual;
     let termino = inicioExecucao + escolhido.execucao;
     let turnaround = termino - escolhido.chegada;
@@ -59,7 +58,18 @@ export function prioridade(processArray) {
       deadlineOk: '-' 
     });
 
-    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false]);
+  // =========================================================================
+  // ------------------- DEFININDO AS COORDENADAS DO GANTT -------------------
+
+    // Bloco em espera (Amarelo)
+    if (inicioExecucao > escolhido.chegada) {
+      ganttCoordenadas.push([escolhido.pid, escolhido.chegada, inicioExecucao, true, false, false]);
+    }
+
+    // Bloco em execução (Verde)
+    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, false]);
+    
+    // =========================================================================
 
     // Avança o tempo do sistema para o final da execução do processo
     tempoAtual = termino;
@@ -68,7 +78,7 @@ export function prioridade(processArray) {
 
   }
   
-  // Como este algoritmo de Prioridade é não preemptivo, o número de preempções será automaticamente 0
+  // Como o algoritmo é não preemptivo, o número de preempções permanece 0
   const numeroPreempcoes = 0;
 
   return {

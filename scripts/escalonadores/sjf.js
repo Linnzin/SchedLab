@@ -27,8 +27,8 @@ export function sjf(processArray) {
 
     if (disponiveis.length === 0) {
       let proximaChegada = Math.min(...processosRestantes.map(p => p.chegada));
-      // Registra o bloco ocioso na nova estrutura de 5 posições [pid, inicio, fim, trocaContexto, estouroDeadline]
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false]);
+     // CPU Ociosa adaptada para o novo padrão de 6 posições
+      ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false, false]);
       tempoAtual = proximaChegada;
       continue;
     }
@@ -62,8 +62,18 @@ export function sjf(processArray) {
       deadlineOk: deadlineOk
     });
 
-    // Registra a execução real do processo no gráfico de Gantt (para pintar de verde)
-    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false]);
+    // =========================================================================
+    // ------------------- DEFININDO AS COORDENADAS DO GANTT -------------------
+
+    // Bloco em espera (Amarelo)
+    if (inicioExecucao > escolhido.chegada) {
+      ganttCoordenadas.push([escolhido.pid, escolhido.chegada, inicioExecucao, true, false, false]);
+    }
+
+    // Bloco em execução (Verde)
+    ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, false]);
+
+    // =========================================================================
 
     // Avança o tempo do sistema para o final da execução do processo
     tempoAtual = termino;
