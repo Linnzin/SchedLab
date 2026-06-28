@@ -5,7 +5,7 @@ export function sjf(processArray) {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
     let execucao = p.execucao ?? p[2];
-    let deadline = p.deadline ?? p[3]; 
+    let deadline = p.deadline ?? p[3];
     let prioridade = p.prioridade ?? p[4];
 
     return {
@@ -27,8 +27,8 @@ export function sjf(processArray) {
 
     if (disponiveis.length === 0) {
       let proximaChegada = Math.min(...processosRestantes.map(p => p.chegada));
-     // CPU Ociosa adaptada para o novo padrão de 6 posições
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false, false]);
+      // feature suspensa — talvez seja adicionada no futuro
+      // ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false, false]);
       tempoAtual = proximaChegada;
       continue;
     }
