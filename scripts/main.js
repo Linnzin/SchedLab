@@ -150,45 +150,76 @@ function upadateProcessTable(processTable, resultadoTabela){
 }
 
 // função: gera diagrama de gantt
-function ganttChart(processes, scheduler) {
-  let deadlineIds = []
+function ganttChart(ganttData, schedulerName) {
+  // ganttData = array de [pid, inicio, fim, espera, sobrecarga, deadline]
+
+  if (!ganttData || ganttData.length === 0) {
+    console.warn("Sem dados para o gráfico Gantt.");
+    return;
+  }
+
+  // Tempo máximo da simulação
+  const maxTime = Math.max(...ganttData.map(bloco => bloco[2]));
+
+  // Categorias do eixo Y: PIDs únicos (inclui "Ocioso" e "Sobrecarga" se existirem)
+  const pids = [...new Set(ganttData.map(bloco => bloco[0]))];
+  const categories = pids.map(pid => `P${pid}`);
+
+  // Monta os dados da série com cores baseadas nas flags
+  const seriesData = ganttData.map(bloco => {
+    const [pid, inicio, fim, espera, sobrecarga, deadline] = bloco;
+
+    let color, name;
+    if (pid === "Ocioso") {
+      color = '#cccccc';
+      name = 'Ocioso';
+    } else if (pid === "Sobrecarga") {
+      color = '#ff9999';
+      name = 'Sobrecarga';
+    } else if (espera) {
+      color = '#ffcc66'; // amarelo
+      name = `P${pid} (espera)`;
+    } else if (deadline) {
+      color = '#999999'; // cinza (fora do prazo)
+      name = `P${pid} (fora do prazo)`;
+    } else {
+      color = '#66cc66'; // verde (execução)
+      name = `P${pid}`;
+    }
+
+    const yIndex = categories.indexOf(`P${pid}`);
+    return {
+      name,
+      start: inicio,
+      end: fim,
+      y: yIndex !== -1 ? yIndex : 0,
+      color
+    };
+  });
+
   Highcharts.chart('gantt-chart', {
     chart: {
       type: 'gantt',
-      backgroundColor: 'hsl(0, 0%, 100%)',
-      height: 400,
-      width: null
+      backgroundColor: '#ffffff',
+      height: 400
     },
     title: {
-      text: scheduler.toUpperCase()
+      text: schedulerName.toUpperCase()
     },
     xAxis: {
       min: 0,
-      max: processes.at(-1)[2], // tempo final do último da lista 
+      max: maxTime,
       tickInterval: 5,
-      gridLineWidth: 1,
-      plotLines: processes.flatMap(proc => {
-        if (!proc[4] || deadlineIds.includes(proc[0])) {
-          return [];
-        }
-        deadlineIds.push(proc[0]);
-        return [
-          {
-            value: proc[1],
-            color: 'red',
-            width: 2,
-            zIndex: 5
-          }
-        ];
-      })
+      gridLineWidth: 1
+      // plotLines removidas porque a lógica antiga estava incorreta
     },
     yAxis: {
       title: '',
-      categories: Array.from({ length: Math.max(...processes.map(p => p[0])) }, (_, i) => `ID: ${i + 1}`),
+      categories: categories,
       gridLineWidth: 1
     },
     legend: {
-      enabled: false,
+      enabled: false
     },
     plotOptions: {
       series: {
@@ -197,22 +228,12 @@ function ganttChart(processes, scheduler) {
       }
     },
     series: [{
-      name: scheduler.toUpperCase(),
-      data: processes.flatMap(proc => [
-        {
-          name: (!proc[4]) ? ((!proc[3]) ? `ID: ${proc[0]}` : 'Troca de Contexto (Sobrecarga)') : `ID: ${proc[0]} - Fora do Prazo`,
-          start: proc[1],
-          end: proc[2],
-          y: proc[0] - 1, // primeira linha = 0
-          color: (!proc[4]) ? ((!proc[3]) ? 'green' : 'red') : 'gray'
-        }
-      ])
+      name: schedulerName.toUpperCase(),
+      data: seriesData
     }],
     tooltip: {
       formatter: function () {
-        return '<b>' + this.point.name + '</b><br/>' +
-          'Início: ' + this.point.start + '<br/>' +
-          'Fim: ' + this.point.end;
+        return `<b>${this.point.name}</b><br/>Início: ${this.point.start}<br/>Fim: ${this.point.end}`;
       }
     },
     credits: {
