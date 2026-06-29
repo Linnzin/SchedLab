@@ -5,23 +5,40 @@ const btnAbout = document.querySelector('.btn-about');
 const footer = document.querySelector('footer');
 const btnMoon = document.querySelector('.btn-moon');
 
-// ativa o modo escuro
-btnMoon.addEventListener('click', function (e) {
+const themes = {
+  "dark": darkTheme,
+  "light": lightTheme
+}
+
+function changeTheme(themeFunc) { themeFunc() };
+
+// função: ativa o modo escuro
+function darkTheme() {
   document.documentElement.setAttribute("data-theme", "dark");
-  this.disable = true;
-  this.style.display = 'none';
+  btnMoon.style.display = 'none';
   btnSun.style.display = 'grid';
-});
+  sessionStorage.setItem("theme", "dark");
+}
 
-// ativa o modo claro
-btnSun.addEventListener('click', function (e) {
+// função: ativa o modo claro
+function lightTheme() {
   document.documentElement.setAttribute("data-theme", "light");
-  this.disable = true;
-  this.style.display = 'none';
+  btnSun.style.display = 'none';
   btnMoon.style.display = 'grid';
+  sessionStorage.setItem("theme", "light");
+}
+
+// evento: botão modo escuro
+btnMoon.addEventListener('click', function (e) {
+  darkTheme();
 });
 
-// desce a página para o footer
+// evento: botão modo claro
+btnSun.addEventListener('click', function (e) {
+  lightTheme();
+});
+
+// evento: desce a página para o footer
 btnAbout.addEventListener('click', function (e) {
   footer.scrollIntoView({
     behavior: 'smooth',
