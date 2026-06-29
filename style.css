@@ -5,7 +5,7 @@
 }
 
 :root {
-  --cor-base-header: hsl(0, 0%, 0%);
+  --cor-base-header: hsl(229, 30%, 11%);
   --cor-base-main: hsl(48, 100%, 98%);
   --cor-destaque: hsl(0, 100%, 50%);
 
@@ -290,7 +290,7 @@ table {
 
 footer {
   color: var(--cor-texto-header);
-  background-color: var(--cor-base-header);
+  background-image: linear-gradient(var(--cor-base-header), hsl(from var(--cor-base-header) h s calc(l - 40)));
   display: grid;
   grid-template-columns: 1.3fr 1fr 1fr;
   grid-template-rows: 1fr auto;
