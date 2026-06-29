@@ -5,7 +5,7 @@ export function prioridade(arrayProcessos) {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
     let execucao = p.execucao ?? p[2];
-    let prioridade = p.prioridade ?? p[4]; 
+    let prioridade = p.prioridade ?? p[3]; 
 
     return {
       pid: pid,
