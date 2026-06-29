@@ -5,7 +5,7 @@
 }
 
 :root {
-  --cor-base-header: hsl(0, 0%, 0%);
+  --cor-base-header: hsl(229, 30%, 11%);
   --cor-base-main: hsl(48, 100%, 98%);
   --cor-destaque: hsl(0, 100%, 50%);
 
@@ -29,7 +29,7 @@ body {
   height: 100dvh;
   margin: 0;
   display: grid;
-  grid-template-rows: 90px 1fr 360px;
+  grid-template-rows: 90px 1fr auto;
   grid-template-columns: 100%;
   background-color: var(--cor-base-main);
   background-image:
@@ -133,10 +133,10 @@ main.escalonador {
   margin: 0;
   padding: 1rem;
   border-radius: 1rem;
-  
+
   text-align: justify;
   justify-items: center;
-  
+
   border: 1px solid var(--cor-texto-main);
   color: var(--cor-texto-main);
   background-color: hsla(from var(--cor-base-header) h l s / 0.2);
@@ -265,10 +265,21 @@ table {
   }
 }
 
-#context { fill: hsl(0, 80%, 30%); }
-#exec { fill: hsl(140, 80%, 30%); }
-#wait { fill: hsl(60, 80%, 30%); }
-#dead { fill: hsl(240, 5%, 30%); }
+#context {
+  fill: hsl(0, 80%, 30%);
+}
+
+#exec {
+  fill: hsl(140, 80%, 30%);
+}
+
+#wait {
+  fill: hsl(60, 80%, 30%);
+}
+
+#dead {
+  fill: hsl(240, 5%, 30%);
+}
 
 #gantt-chart {
   width: 100%;
@@ -279,17 +290,39 @@ table {
 
 footer {
   color: var(--cor-texto-header);
-  background-color: var(--cor-base-header);
+  background-image: linear-gradient(var(--cor-base-header), hsl(from var(--cor-base-header) h s calc(l - 40)));
   display: grid;
-  grid-template-columns: 1f 1f 1f;
-  grid-template-rows: 100%;
-  grid-auto-flow: column;
-  padding: 20px;
-  gap: 20px;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    "sobre github source"
+    "copy copy copy";
+  grid-auto-flow: row;
+  padding: 1rem 2rem;
+  gap: 1rem 5rem;
   box-shadow: 0px 0px 80px 15px var(--cor-base-header);
   border-top: 2px solid hsl(from var(--cor-texto-header) h s l / .7);
+
+  p {
+    margin: 0;
+  }
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: justify;
+  gap: 1rem;
+}
+
+.footer-bottom {
+  justify-items: center;
+  font-size: 0.7rem;
+  color: hsla(from var(--cor-texto-header) h s l / 0.3);
 }
 
 footer a {
   color: var(--cor-link);
+  font-size: 1rem;
 }
