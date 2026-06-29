@@ -155,8 +155,8 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
 
   function blockName(process) {
     if (process[3]) { return `PID: ${process[0]} (Esperando)` }
-    if (process[4]) { `Troca de Contexto (Sobrecarga)` }
-    if (process[5]) { `PID: ${process[0]} (Fora do Prazo — Deadline Estourada)` }
+    if (process[4]) { return `Troca de Contexto (Sobrecarga)` }
+    if (process[5]) { return `PID: ${process[0]} (Fora do Prazo — Deadline Estourada)` }
     return `PID: ${process[0]} (Execução)`
   }
 
