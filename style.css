@@ -265,10 +265,10 @@ table {
   }
 }
 
-#dead { fill: hsl(0, 80%, 30%); }
+#context { fill: hsl(0, 80%, 30%); }
 #exec { fill: hsl(140, 80%, 30%); }
 #wait { fill: hsl(60, 80%, 30%); }
-#context { fill: hsl(240, 5%, 30%); }
+#dead { fill: hsl(240, 5%, 30%); }
 
 #gantt-chart {
   width: 100%;

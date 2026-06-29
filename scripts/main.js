@@ -235,8 +235,8 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
       // Desenha a linha SVG usando o renderer do Highcharts
       const line = chart.renderer.path(['M', xPx, yTopPx, 'L', xPx, yBottomPx])
         .attr({
-          stroke: 'hsl(0, 100%, 52%)',
-          'stroke-width': 2,
+          stroke: 'hsl(0, 80%, 30%)',
+          'stroke-width': 4,
           'stroke-dasharray': '6,3',
           zIndex: 6
         })
@@ -245,7 +245,7 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
       // Label com o nome da deadline
       const label = chart.renderer.text(`D${pid}`, xPx + 3, yTopPx + 12)
         .attr({ zIndex: 7 })
-        .css({ color: 'hsl(0, 80%, 40%)', fontSize: '10px', fontWeight: 'bold' })
+        .css({ color: 'hsl(0, 80%, 30%)', fontSize: '10px', fontWeight: 'bold' })
         .add();
 
       deadlineLines.push(line, label);
@@ -287,14 +287,25 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
       labels: {
         style: {
           color: 'var(--cor-texto-main)',
+          fontFamily: 'inherit',
           fontWeight: 'bold'
         }
       }
-      },
+    },
     yAxis: {
       title: '',
-      categories: Array.from({ length: Math.max(...ganttCoordenadas.map(p => p[0])) }, (_, i) => `ID: ${i + 1}`),
-      gridLineWidth: 1
+      categories: Array.from({ length: Math.max(...ganttCoordenadas.map(p => p[0])) }, (_, i) => `PID: ${i + 1}`),
+      gridLineWidth: 1,
+      labels: {
+        formatter: function () {
+          return this.value;
+        },
+        style: {
+          color: 'var(--cor-texto-main)',
+          fontFamily: 'inherit',
+          fontWeight: 'bold'
+        }
+      }
     },
     legend: {
       enabled: false
