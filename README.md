@@ -89,9 +89,9 @@ Desenvolvido por:
 
 Lincoln Pereira da Silva - [GitHub](https://github.com/Linnzin) | [LinkedIn](https://www.linkedin.com/in/lincolnps21/)
 
-Guilherme de Santana Soares Xavier - [GitHub](https://github.com/DasGestirn) | LinkedIn
+Guilherme de Santana Soares Xavier - [GitHub](https://github.com/DasGestirn) | [LinkedIn](https://www.linkedin.com/in/guilherme-xavier-61a54639a/)
 
-Jacques Barreto Salah - [GitHub](https://github.com/JacquesSalah) | LinkedIn
+Jacques Barreto Salah - [GitHub](https://github.com/JacquesSalah) | [LinkedIn](https://www.linkedin.com/in/jacques-salah/)
 
 ## 📄 Licença
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
