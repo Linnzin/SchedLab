@@ -42,6 +42,7 @@ const btnAddRow = document.querySelector('.btn-adicionar');
 const btnRemoveRow = document.querySelector('.btn-remover');
 const btnSimulate = document.querySelector('.btn-simular');
 const processTable = document.querySelector('.tabela-agendamento__corpo');
+const divGantt = document.querySelector('.gantt')
 
 //================ Funções utilitárias ================ 
 // função: calcula as informações para o resumo qunatitativo
@@ -88,7 +89,7 @@ function htmlTableRows(pid, chegada, execucao, deadline, prioridade, termino, es
 };
 
 // função: validar as entradas do usuário
-function schedulerValidation(scheduler){
+function schedulerValidation(scheduler) {
   switch (scheduler) {
     case "robin":
       if (configuracaoEscalonador.quantum === null || configuracaoEscalonador.quantum <= 0) {
@@ -123,22 +124,22 @@ function schedulerValidation(scheduler){
 };
 
 // função: executa o escalonador
-function execScheduler(scheduler, processes){
+function execScheduler(scheduler, processes) {
   return scheduler(processes)
 }
 
 // função: atualiza a tabela de resumo quantitativo
-function upadateMetricTable(resultadoMetricasGlobais){
+function upadateMetricTable(resultadoMetricasGlobais) {
   const cell = Array.from(document.querySelectorAll('.tabela-mediasglobais td'));
   cell[0].textContent = resultadoMetricasGlobais.mediaEspera;
   cell[1].textContent = resultadoMetricasGlobais.mediaTurnaround;
   cell[2].textContent = resultadoMetricasGlobais.throughput;
-  cell[3].textContent = resultadoMetricasGlobais.percentualOcioso;
+  cell[3].textContent = `${resultadoMetricasGlobais.percentualOcioso}%`;
   cell[4].textContent = resultadoMetricasGlobais.numeroPreempcoes;
 }
 
 // função: atualiza a tabela de processos
-function upadateProcessTable(processTable, resultadoTabela){
+function upadateProcessTable(processTable, resultadoTabela) {
   const processTableArray = Array.from(processTable.children);
   for (let i = 0; i < resultadoTabela.length; i++) {
     const cell = Array.from(processTableArray[i].children);
@@ -150,88 +151,155 @@ function upadateProcessTable(processTable, resultadoTabela){
 }
 
 // função: gera diagrama de gantt
-function ganttChart(ganttData, schedulerName) {
-  if (!ganttData || ganttData.length === 0) {
-    console.warn("Sem dados para o gráfico Gantt.");
-    return;
+function ganttChart(processArray, scheduler) {
+
+  function blockName(process) {
+    if (process[3]) { return `PID: ${process[0]} (Esperando)` }
+    if (process[4]) { `Troca de Contexto (Sobrecarga)` }
+    if (process[5]) { `PID: ${process[0]} (Fora do Prazo — Deadline Estourada)` }
+    return `PID: ${process[0]} (Execução)`
   }
 
-  // Log para depuração (verifique no console)
-  console.log('Dados do Gantt:', ganttData);
-
-  const maxTime = Math.max(...ganttData.map(b => b[2]));
-
-  // Extrai PIDs únicos (inclui "Ocioso" se houver, mas vamos filtrar para evitar categorias estranhas)
-  const pids = [...new Set(ganttData.map(b => b[0]))];
-  const categories = pids.map(pid => `P${pid}`);
-
-  const seriesData = ganttData.map(b => {
-    const [pid, inicio, fim, espera, sobrecarga, deadline] = b;
-    let color, name;
-
-    // Ordem de prioridade: Ocioso > Sobrecarga > Espera > Deadline > Execução
-    if (pid === "Ocioso") {
-      color = '#cccccc';
-      name = 'Ocioso';
-    } else if (sobrecarga) {
-      color = '#ff9999'; // vermelho
-      name = `P${pid} (sobrecarga)`;
-    } else if (espera) {
-      color = '#ffcc66'; // amarelo
-      name = `P${pid} (espera)`;
-    } else if (deadline) {
-      color = '#999999'; // cinza
-      name = `P${pid} (fora do prazo)`;
-    } else {
-      color = '#66cc66'; // verde (execução)
-      name = `P${pid}`;
+  function blockColor(process) {
+    // espera
+    if (process[3]) {
+      return {
+        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+        stops: [
+          [0, 'hsla(60, 80%, 60%, 0.2)'],
+          [1, 'hsla(60, 80%, 30%, 0.2)']
+        ]
+      };
     }
-
-    const yIndex = categories.indexOf(`P${pid}`);
+    // troca de contexto
+    if (process[4]) {
+      return {
+        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+        stops: [
+          [0, 'hsl(0, 80%, 60%)'],
+          [1, 'hsl(0, 80%, 30%)']
+        ]
+      };
+    }
+    // deadline estourada
+    if (process[5]) {
+      return {
+        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+        stops: [
+          [0, 'hsl(240, 5%, 60%)'],
+          [1, 'hsl(240, 5%, 30%)']
+        ]
+      };
+    }
+    // execução
     return {
-      name,
-      start: inicio,
-      end: fim,
-      y: yIndex !== -1 ? yIndex : 0,
-      color
+      linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+      stops: [
+        [0, 'hsl(140, 80%, 60%)'],
+        [1, 'hsl(140, 80%, 30%)']
+      ]
     };
-  });
+  }
 
+  let deadlineIds = []
   Highcharts.chart('gantt-chart', {
     chart: {
       type: 'gantt',
-      backgroundColor: '#ffffff',
-      height: 400
+      backgroundColor: 'transparent',
+      height: 400,
+      width: null
     },
-    title: { text: schedulerName.toUpperCase() },
+    title: {
+      text: scheduler.toUpperCase(),
+      style: {
+        color: 'var(--cor-texto-main)',
+        fontWeight: 'bold',
+        fontFamily: 'inherit'
+      }
+    },
     xAxis: {
       min: 0,
-      max: maxTime,
+      max: Math.max(...processArray.map(proc => proc[2])),
+      lineWidth: 1,
+      lineColor: 'var(--cor-texto-main)',
       tickInterval: 5,
-      gridLineWidth: 1
+      gridLineWidth: 1.5,
+      gridLineColor: 'var(--cor-texto-main)',
+      minorTickInterval: 1,
+      minorGridLineWidth: 1,
+      minorGridLineColor: 'var(--cor-texto-main)',
+      gridZIndex: 5,
+      labels: {
+        style: {
+          color: 'var(--cor-texto-main)',
+          fontWeight: 'bold'
+        }
+      },
+      // linha da deadline
+      plotLines: processArray.flatMap(proc => {
+        if (!proc[5] || deadlineIds.includes(proc[0])) {
+          return [];
+        }
+        deadlineIds.push(proc[0]);
+        return [
+          {
+            value: proc[1],
+            color: 'hsl(0, 80%, 30%)',
+            width: 2,
+            zIndex: 6,
+          }
+        ];
+      },
+      )
     },
     yAxis: {
       title: '',
-      categories: categories,
+      categories: Array.from({ length: Math.max(...processArray.map(p => p[0])) }, (_, i) => `ID: ${i + 1}`),
       gridLineWidth: 1
     },
-    legend: { enabled: false },
+    legend: {
+      enabled: false
+    },
     plotOptions: {
       series: {
         pointPadding: 0.1,
         groupPadding: 0.1
       }
     },
-    series: [{
-      name: schedulerName.toUpperCase(),
-      data: seriesData
-    }],
+    // dados para o diagrama
+    series: [
+      {
+        name: '',
+        showInLegend: false,
+        borderWidth: 2,
+        data: processArray.flatMap(proc => [
+          {
+            name: blockName(proc),
+            start: proc[1],
+            end: proc[2],
+            y: proc[0] - 1, // primeira linha = 0
+            color: blockColor(proc),
+          }
+        ])
+      }
+    ],
+    // informações que seguem o mouse
     tooltip: {
+      followPointer: true,
       formatter: function () {
-        return `<b>${this.point.name}</b><br/>Início: ${this.point.start}<br/>Fim: ${this.point.end}`;
+        return '<b>' + this.point.name + '</b><br/>' +
+          'Início: ' + this.point.start + '<br/>' +
+          'Fim: ' + this.point.end;
+      },
+      backgroundColor: 'var(--cor-base-main)',
+      style: {
+        color: 'var(--cor-texto-main)',
+        fontFamily: 'inherit'
       }
     },
-    credits: { enabled: false }
+    credits: {
+      enabled: false
+    }
   });
 }
 
@@ -292,4 +360,9 @@ btnSimulate.addEventListener('click', function (e) {
   upadateProcessTable(processTable, resultadoTabela);
   upadateMetricTable(resultadoMetricasGlobais);
   ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo);
+
+  divGantt.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
 });
