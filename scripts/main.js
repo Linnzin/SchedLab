@@ -201,13 +201,68 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
     };
   }
 
-  let deadlineIds = []
+  let deadlineLines = []
+
+  function drawDeadlineLines(chart) {
+    // Remove linhas antigas (evita duplicação ao redimensionar)
+    deadlineLines.forEach(el => el.destroy());
+    deadlineLines = [];
+
+    const xAxis = chart.xAxis[0];
+    const yAxis = chart.yAxis[0];
+    const seenIds = [];
+
+    processArray.forEach(proc => {
+      const pid = proc[0];
+      const deadline = proc[4];
+
+      if (!deadline || deadline === Infinity || seenIds.includes(pid)) return;
+      seenIds.push(pid);
+
+      // Índice Y do processo no gráfico (mesmo cálculo usado em 'data')
+      const yIndex = pid - 1;
+
+      // Converte deadline para pixel X
+      const xPx = xAxis.toPixels(deadline, false);
+
+      // toPixels(yIndex, false) retorna o centro da categoria.
+      // Subtraindo/somando metade do espaço de uma categoria obtemos topo e fundo do bloco.
+      const categoryHeight = Math.abs(yAxis.toPixels(1, false) - yAxis.toPixels(0, false));
+      const yCenterPx = yAxis.toPixels(yIndex, false);
+      const yTopPx = yCenterPx - categoryHeight / 2;
+      const yBottomPx = yCenterPx + categoryHeight / 2;
+
+      // Desenha a linha SVG usando o renderer do Highcharts
+      const line = chart.renderer.path(['M', xPx, yTopPx, 'L', xPx, yBottomPx])
+        .attr({
+          stroke: 'hsl(0, 100%, 52%)',
+          'stroke-width': 2,
+          'stroke-dasharray': '6,3',
+          zIndex: 6
+        })
+        .add();
+
+      // Label com o nome da deadline
+      const label = chart.renderer.text(`D${pid}`, xPx + 3, yTopPx + 12)
+        .attr({ zIndex: 7 })
+        .css({ color: 'hsl(0, 80%, 40%)', fontSize: '10px', fontWeight: 'bold' })
+        .add();
+
+      deadlineLines.push(line, label);
+    });
+  }
+
   Highcharts.chart('gantt-chart', {
     chart: {
       type: 'gantt',
       backgroundColor: 'transparent',
       height: 400,
-      width: null
+      width: null,
+      events: {
+        render: function () {
+          drawDeadlineLines(this);
+        }
+      }
     },
     title: {
       text: scheduler.toUpperCase(),
@@ -234,26 +289,7 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
           color: 'var(--cor-texto-main)',
           fontWeight: 'bold'
         }
-      },
-      // linha da deadline
-      plotLines: processArray.flatMap(proc => {
-        let deadline = proc[4];
-        if (!deadline || deadline === Infinity || deadlineIds.includes(proc[0])) {
-          return [];
-        }
-        deadlineIds.push(proc[0]);
-        return [{
-          value: deadline,
-          color: 'hsl(0, 80%, 30%)',
-          width: 2,
-          zIndex: 6,
-          label: {
-            text: `D${proc[0]}`,
-            style: { color: 'hsl(0, 80%, 30%)', fontSize: '10px' },
-            verticalAlign: 'bottom',
-            y: -5}
-        }];
-        })
+      }
       },
     yAxis: {
       title: '',
