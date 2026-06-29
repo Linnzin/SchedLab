@@ -151,7 +151,7 @@ function upadateProcessTable(processTable, resultadoTabela) {
 }
 
 // função: gera diagrama de gantt
-function ganttChart(processArray, scheduler) {
+function ganttChart(ganttCoordenadas, scheduler, processArray) {
 
   function blockName(process) {
     if (process[3]) { return `PID: ${process[0]} (Esperando)` }
@@ -219,7 +219,7 @@ function ganttChart(processArray, scheduler) {
     },
     xAxis: {
       min: 0,
-      max: Math.max(...processArray.map(proc => proc[2])),
+      max: Math.max(...ganttCoordenadas.map(proc => proc[2])),
       lineWidth: 1,
       lineColor: 'var(--cor-texto-main)',
       tickInterval: 5,
@@ -237,24 +237,27 @@ function ganttChart(processArray, scheduler) {
       },
       // linha da deadline
       plotLines: processArray.flatMap(proc => {
-        if (!proc[5] || deadlineIds.includes(proc[0])) {
+        let deadline = proc[4];
+        if (!deadline || deadline === Infinity || deadlineIds.includes(proc[0])) {
           return [];
         }
         deadlineIds.push(proc[0]);
-        return [
-          {
-            value: proc[1],
-            color: 'hsl(0, 80%, 30%)',
-            width: 2,
-            zIndex: 6,
-          }
-        ];
+        return [{
+          value: deadline,
+          color: 'hsl(0, 80%, 30%)',
+          width: 2,
+          zIndex: 6,
+          label: {
+            text: `D${proc[0]}`,
+            style: { color: 'hsl(0, 80%, 30%)', fontSize: '10px' },
+            verticalAlign: 'bottom',
+            y: -5}
+        }];
+        })
       },
-      )
-    },
     yAxis: {
       title: '',
-      categories: Array.from({ length: Math.max(...processArray.map(p => p[0])) }, (_, i) => `ID: ${i + 1}`),
+      categories: Array.from({ length: Math.max(...ganttCoordenadas.map(p => p[0])) }, (_, i) => `ID: ${i + 1}`),
       gridLineWidth: 1
     },
     legend: {
@@ -272,7 +275,7 @@ function ganttChart(processArray, scheduler) {
         name: '',
         showInLegend: false,
         borderWidth: 2,
-        data: processArray.flatMap(proc => [
+        data: ganttCoordenadas.flatMap(proc => [
           {
             name: blockName(proc),
             start: proc[1],
@@ -359,7 +362,7 @@ btnSimulate.addEventListener('click', function (e) {
 
   upadateProcessTable(processTable, resultadoTabela);
   upadateMetricTable(resultadoMetricasGlobais);
-  ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo);
+  ganttChart(resultadoSimulacao.ganttCoordenadas, e.target.dataset.algoritmo, processArray);
 
   divGantt.scrollIntoView({
     behavior: 'smooth',
