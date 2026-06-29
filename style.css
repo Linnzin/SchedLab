@@ -4,11 +4,20 @@
   box-sizing: border-box;
 }
 
-:root {
-  --cor-base-header: hsl(229, 30%, 11%);
-  --cor-base-main: hsl(48, 100%, 98%);
+:root,
+[data-theme="light"] {
+  --cor-base-header: hsl(231, 29%, 13%);
+  --cor-base-main: hsl(49, 37%, 88%);
   --cor-destaque: hsl(0, 100%, 50%);
+}
 
+[data-theme="dark"] {
+  --cor-base-header: hsl(0, 0%, 0%);
+  --cor-base-main: hsl(225, 17%, 9%);
+  --cor-destaque: hsl(189, 77%, 63%);
+}
+
+:root {
   --cor-texto-header: hsl(from var(--cor-base-header) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100));
   --cor-texto-main: hsl(from var(--cor-base-main) calc(h*0) calc(s*0) clamp(0, (60 - l) * 1000, 100));
   --cor-link: hsl(from var(--cor-base-header) clamp(180, (l - 60) * 1000, 235) 100 50);
@@ -42,19 +51,21 @@ body {
 /* ===== HEADER ===== */
 
 header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background-color: var(--cor-base-header);
-  color: var(--cor-texto-header);
-  margin: 0;
   display: flex;
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  padding: 0 5rem;
   align-content: center;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   justify-items: center;
+  
+  background-color: var(--cor-base-header);
+  color: var(--cor-texto-header);
   box-shadow: 0px 0px 80px 15px var(--cor-base-header);
-  border-bottom: 2px solid hsl(from var(--cor-texto-header) h s l / .7);
+  border-bottom: 1px solid hsl(from var(--cor-texto-header) h s l / .7);
+
   font-size: 2rem;
   font-weight: bold;
   font-style: italic;
@@ -65,11 +76,26 @@ header a {
   text-decoration: none;
 }
 
+.header-btn {
+  background-color: transparent;
+  border: 0;
+  color: hsl(from var(--cor-texto-header));
+  transition: transform 0.2s ease;
+}
+
+.header-btn:hover {
+  transform: scale(1.3);
+}
+
+.btn-sun{
+  display: none;
+}
+
 /* ===== MAIN ===== */
 /* ===== página inicial ===== */
 
 main {
-  padding: 100px;
+  padding: 3rem 5rem;
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(5, 1fr);
@@ -171,6 +197,7 @@ main.escalonador {
   border-radius: 1rem;
   width: 250px;
   padding: 6px 10px;
+  color: var(--cor-texto-main);
   background-color: hsla(from var(--cor-base-header) h l s / 0.1);
 }
 
@@ -301,7 +328,7 @@ footer {
   padding: 1rem 2rem;
   gap: 1rem 5rem;
   box-shadow: 0px 0px 80px 15px var(--cor-base-header);
-  border-top: 2px solid hsl(from var(--cor-texto-header) h s l / .7);
+  border-top: 1px solid hsl(from var(--cor-texto-header) h s l / .7);
 
   p {
     margin: 0;

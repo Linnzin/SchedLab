@@ -1,4 +1,4 @@
-# 🖥️ Simulador de Escalonamento de Processos
+# 🖥️ SchedLab - Simulador de Escalonamento de Processos
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
@@ -12,7 +12,7 @@ Este projeto foi desenvolvido como parte dos requisitos práticos da disciplina 
 
 ## 🔗 Demonstração
 
-💻 **[Acesse o simulador](URL_DO_GITHUB_PAGES_OU_DEPLOY)**
+💻 **[Acesse o SchedLab](URL_DO_GITHUB_PAGES_OU_DEPLOY)**
 
 *(Substitua esta linha por um link para o seu site no GitHub Pages)*
 
@@ -28,7 +28,7 @@ Este projeto foi desenvolvido como parte dos requisitos práticos da disciplina 
 
 ## 🚀 Funcionalidades e Algoritmos
 
-O simulador foi construído utilizando o paradigma de **Simulação de Eventos Discretos**, garantindo precisão matemática no cálculo dos tempos do sistema.
+O SchedLab foi construído utilizando o paradigma de **Simulação de Eventos Discretos**, garantindo precisão matemática no cálculo dos tempos do sistema.
 
 ### Algoritmos Implementados:
 1. **FIFO/FCFS** (First Come, First Served) - *Não preemptivo*.

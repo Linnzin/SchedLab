@@ -42,7 +42,7 @@ const btnAddRow = document.querySelector('.btn-adicionar');
 const btnRemoveRow = document.querySelector('.btn-remover');
 const btnSimulate = document.querySelector('.btn-simular');
 const processTable = document.querySelector('.tabela-agendamento__corpo');
-const divGantt = document.querySelector('.gantt')
+const divGantt = document.querySelector('.gantt');
 
 //================ Funções utilitárias ================ 
 // função: calcula as informações para o resumo qunatitativo
