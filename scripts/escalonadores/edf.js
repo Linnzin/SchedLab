@@ -1,3 +1,4 @@
+// processArray -> [[pid, tempoDeChegada, duração, prioridade, deadline, quantum, sobrecarga]]
 export function edf(arrayProcessos) {
   // Define quantum e sobrecarga a partir do ultimo processo
   let ultimoProcesso = arrayProcessos[arrayProcessos.length - 1];
@@ -5,7 +6,7 @@ export function edf(arrayProcessos) {
   let quantum = Math.max(1, Number(ultimoProcesso?.[5]) || 1);
   let sobrecarga = Number(ultimoProcesso?.[6]) || 0;
 
-  // Converte entradas (suporta array ou objeto)
+  // Converte entradas 
   let processosNaoChegados = arrayProcessos.map(p => {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
@@ -82,7 +83,7 @@ export function edf(arrayProcessos) {
     let escolhido_pid = escolhido.pid;
 
     // ============================================================
-    // SÓ APLICA SOBRECARGA SE O ÚLTIMO PROCESSO FOI PREEMPTADO
+    // BLOCO DE SOBRECARGA (se houve preempção)
     // ============================================================
     if (ultimoPid !== null && ultimoPreemptado) {
       if (sobrecarga > 0) {
@@ -91,15 +92,14 @@ export function edf(arrayProcessos) {
         ultimoTempoPorProcesso[ultimoPid] += sobrecarga;
         verificarChegadas(tempoAtual);
         // Após a sobrecarga, pode ser que novos processos tenham chegado,
-        // mas o escolhido permanece (já foi retirado da fila). 
-        // Se houver um processo com deadline menor que chegou durante a sobrecarga,
-        // ele será considerado na próxima iteração, pois o escolhido já está fora da fila.
-        // Isso é aceitável, pois a sobrecarga é um custo fixo.
+        // mas o escolhido permanece (já foi retirado da fila).
       }
     }
 
-    // Bloco de espera
+    // ============================================================
+    // BLOCO DE ESPERA (do escolhido)
     // define tempo de espera a partir do tempo atual e do ultimo registro
+    // ============================================================    
     if (tempoAtual > ultimoTempoPorProcesso[escolhido_pid]){
       ganttCoordenadas.push([escolhido_pid, ultimoTempoPorProcesso[escolhido_pid],tempoAtual, 
         true, false, false])
@@ -107,33 +107,24 @@ export function edf(arrayProcessos) {
 
 
 
-    // Define o quanto o processo vai executar:
-    // - No máximo o quantum
-    // - No máximo o tempo restante
+    // ============================================================
+    // EXECUÇÃO
+    // ============================================================
     let tempoExecutado = Math.min(escolhido.tempoRestante, quantum);
-
-    // (Opcional) Podemos também limitar até a próxima chegada para preservar a preempção por deadline
-    // Mas como vamos reavaliar a cada quantum, não é estritamente necessário.
-    // Se quiser preempção imediata ao chegar um processo com deadline menor, 
-    // podemos calcular o tempo até a próxima chegada e limitar.
-    // Para manter o comportamento descrito, faremos a verificação apenas no final do quantum.
-
     let inicioExecucao = tempoAtual;
     let termino = inicioExecucao + tempoExecutado;
 
-    // Checa estouro de deadline e registra o bloco no gantt
+    // Flag de deadline estourada
     if (escolhido.deadline !== Infinity && termino > escolhido.deadline){
       ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, true]);
     }
     else {
       ganttCoordenadas.push([escolhido.pid, inicioExecucao, termino, false, false, false]);
     }
-
-    // Avança o tempo e desconta o que rodou
+    
     tempoAtual = termino;
     escolhido.tempoRestante -= tempoExecutado;
-
-    // Verifica se novos processos chegaram durante a execução
+    
     verificarChegadas(tempoAtual);
 
     // atualiza ultimo tempo do processo
@@ -141,13 +132,12 @@ export function edf(arrayProcessos) {
 
     // Atualiza estado do processo
     if (escolhido.tempoRestante > 0) {
-      // Processo não terminou → foi preemptado
+      // Processo não terminou (foi preemptado)
       numeroPreempcoes++;
       // Coloca de volta na fila de prontos (será reordenado na próxima escolha)
       filaProntos.push(escolhido);
       ultimoPreemptado = true;
     } else {
-      // Processo terminou
       escolhido.termino = tempoAtual;
       processosConcluidos.push(escolhido);
       ultimoPreemptado = false;

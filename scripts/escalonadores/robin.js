@@ -1,3 +1,4 @@
+// processArray -> [[pid, tempoDeChegada, duração, prioridade, deadline, quantum, sobrecarga]]
 export function robin(arrayProcessos) {
   // Define quantum e sobrecarga a partir do ultimo processo
   let ultimoProcesso = arrayProcessos[arrayProcessos.length - 1];
@@ -5,7 +6,7 @@ export function robin(arrayProcessos) {
   let quantum = Math.max(1, Number(ultimoProcesso?.[5]) || 1);
   let sobrecarga = Number(ultimoProcesso?.[6]) || 0;
 
-  // Converte entradas (suporta array ou objeto)
+  // Converte entradas 
   let processosNaoChegados = arrayProcessos.map(p => {
     let pid = p.id ?? p[0];
     let chegada = p.chegada ?? p[1];
@@ -40,7 +41,7 @@ export function robin(arrayProcessos) {
   let ultimoPid = null;
   let ultimoPreemptado = false;
   let ultimoTempoPorProcesso = {};
-  let processoPreemptado = null; // ← adicione junto às outras variáveis de estado
+  let processoPreemptado = null; 
 
   const verificarChegadas = (tempo) => {
     while (processosNaoChegados.length > 0 && processosNaoChegados[0].chegada <= tempo) {
@@ -52,7 +53,7 @@ export function robin(arrayProcessos) {
 
   while (processosConcluidos.length < totalProcessos) {
     verificarChegadas(tempoAtual);
-
+    // Se não há processos prontos, fica ocioso até a próxima chegada
     if (filaProntos.length === 0) {
       // Se há processo preemptado aguardando sobrecarga, não vai para ocioso
       if (processoPreemptado) {
@@ -75,7 +76,7 @@ export function robin(arrayProcessos) {
     let escolhido_pid = escolhido.pid;
 
     // ============================================================
-    // 1. BLOCO DE SOBRECARGA (se houve preempção)
+    // BLOCO DE SOBRECARGA (se houve preempção)
     // ============================================================
     if (ultimoPid !== null && ultimoPreemptado) {
       if (sobrecarga > 0) {
@@ -92,16 +93,16 @@ export function robin(arrayProcessos) {
     }
 
     // ============================================================
-    // 2. BLOCO DE ESPERA (do escolhido)
+    // BLOCO DE ESPERA (do escolhido)
+    // define tempo de espera a partir do tempo atual e do ultimo registro
     // ============================================================
-    // Só gera espera se o intervalo for realmente positivo
     if (tempoAtual > (ultimoTempoPorProcesso[escolhido_pid] ?? escolhido.chegada)) {
       let inicioEspera = ultimoTempoPorProcesso[escolhido_pid] ?? escolhido.chegada;
       ganttCoordenadas.push([escolhido_pid, inicioEspera, tempoAtual, true, false, false]);
     }
 
     // ============================================================
-    // 3. EXECUÇÃO
+    // EXECUÇÃO
     // ============================================================
     let tempoExecutado = Math.min(escolhido.tempoRestante, quantum);
     let inicioExecucao = tempoAtual;
@@ -134,7 +135,6 @@ export function robin(arrayProcessos) {
     }
 
     ultimoPid = escolhido.pid;
-    // Guarda o processo preemptado para inserir depois da sobrecarga
   }
 
   // Monta tabela final
