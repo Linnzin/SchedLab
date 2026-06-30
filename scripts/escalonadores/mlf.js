@@ -37,7 +37,7 @@ function waitingBlocks(ganttCoordenadas, arrayProcesses) {
 }
 
 // processArray -> [[pid 0, tempoDeChegada 1, duração 2, prioridade 3, deadline 4, quantum 5, sobrecarga 6]]
-export function proprio(arrayProcesses) {
+export function mlf(arrayProcesses) {
   // O processo com maior prioridade será aquele que tem mais folga para executar.
   // O processo que passar do prazo irá para a fila dos processos atrasados (delayedProcessesQueue).
   // A fila dos processos atrasado é ordenada pelo tempo de chegada.

@@ -103,7 +103,7 @@ main {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 90px 300px 300px;
+  grid-template-rows: 90px auto auto;
   grid-template-areas:
     "pos-0 pos-0 pos-0 pos-0 pos-0"
     "pos-1 pos-2 pos-3 pos-4 pos-5"
@@ -258,9 +258,7 @@ main.escalonador {
 
 table {
   color: var(--cor-texto-main);
-  ;
   border: 1px solid var(--cor-texto-main);
-  ;
   text-align: center;
   border-collapse: collapse;
 
@@ -282,6 +280,10 @@ table {
     background-color: transparent;
     width: 50px;
   }
+}
+
+.disable {
+  color: hsla(from var(--cor-texto-main) h s l / 0.1)
 }
 
 .gantt {

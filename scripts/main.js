@@ -6,7 +6,7 @@ import { sjf } from './escalonadores/sjf.js';
 import { prioridade } from './escalonadores/prioridade.js';
 import { robin } from './escalonadores/robin.js';
 import { edf } from './escalonadores/edf.js';
-import { proprio } from './escalonadores/proprio.js';
+import { mlf } from './escalonadores/mlf.js';
 
 const schedulers = {
   "fcfs": fcfs,
@@ -14,7 +14,7 @@ const schedulers = {
   "prioridade": prioridade,
   "robin": robin,
   "edf": edf,
-  "proprio": proprio
+  "mlf": mlf
 }
 
 //================ Leitura das Entradas ================

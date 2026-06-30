@@ -61,14 +61,14 @@
   </header>
   <main class="escalonador">
     <div class="conteudo explicacao">
-      <h3>Escalonador Original</h3>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem aperiam iusto non illum laboriosam voluptatum
-        magni iste sapiente laborum vel delectus odit veritatis, hic eaque at optio dignissimos cupiditate dolorem?
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Exercitationem delectus voluptas iusto minima quia
-        sunt ullam reprehenderit nisi aperiam perspiciatis est reiciendis neque necessitatibus nobis accusamus, tempora
-        animi corrupti tempore. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum, quas provident.
-        Reiciendis possimus blanditiis debitis, praesentium vitae provident. Dicta, veritatis! Consectetur totam, ab
-        impedit quidem vel quas laborum atque vero!</p>
+      <h3>MLF - Most Laxity First</h3>
+      <p>O Most Laxity First ("maior folga primeiro") é um algoritmo original de escalonamento dinâmico, desenvolvido para atender aos
+        requisitos estabelecidos para este projeto. <strong> O sistema gerencia processos com
+        restrições de tempo através do cálculo de folga, que é recalculado sempre que um novo processo chega ao
+        escalonador. </strong> A prioridade de execução é concedida aos processos que apresentam a maior margem de tempo antes de
+        atingirem o seu prazo limite (deadline). Caso um processo ultrapasse essa janela temporal e fique vencido, ele
+        perde a prioridade do cálculo de folga e é movido para uma fila de atrasados exclusiva, onde passa a ser
+        processado de forma sequencial, respeitando estritamente a ordem cronológica de chegada.</p>
     </div>
     <div class="conteudo config">
       <h3 style="grid-area: row-1;">Configuração do Escalonador</h3>
@@ -91,7 +91,7 @@
         <button class="btn btn-adicionar" data-algoritmo="robin">Adicionar Processo (+)</button>
         <button class="btn btn-remover">Remover Processo (-)</button>
       </div>
-      <button style="grid-area: row-3;" class="btn btn-simular" data-algoritmo="proprio">Simular Escalonador</button>
+      <button style="grid-area: row-3;" class="btn btn-simular" data-algoritmo="mlf">Simular Escalonador</button>
     </div>
     <div class="conteudo tabela">
       <h3>Tabela de Agendamento</h3>
@@ -103,7 +103,7 @@
               <th>Tempo de Chegada</th>
               <th>Tempo de Execução</th>
               <th>Deadline</th>
-              <th>Prioridade</th>
+              <th class="disable">Prioridade</th>
               <th>Término</th>
               <th>Tempo de Espera</th>
               <th>Turnaround</th>
