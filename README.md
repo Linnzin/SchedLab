@@ -19,8 +19,6 @@ Este projeto foi desenvolvido como parte dos requisitos práticos da disciplina 
 
 Como a aplicação foi desenvolvida puramente em ambiente web, executá-la é extremamente simples.
 
-### Passo a Passo
-
 ```bash
 # 1. Clone o repositório
 git clone https://github.com/Linnzin/escalonadores_so.git
@@ -29,6 +27,27 @@ git clone https://github.com/Linnzin/escalonadores_so.git
 cd escalonadores_so
 
 # 3. Abra o index.html através de um servidor de desenvolvimento local (recomendação: Live Server para VSCode)
+```
+
+---
+
+### Passo a Passo de Utilização do Simulador
+```bash
+# 1. Acesse a página inicial.
+
+# 2. Clique no escalonador de sua escolha.
+
+# 3. Insira os dados do processo a ser inserido no campo "Configuração do Escalonador". 
+
+# 4. Clique em  "Adicionar Processo (+)" para adicionar um processo com os dados estabelecidos à fila.
+
+# 5. Repita os passos 3 e 4 para adicionar demais processos.
+
+# 6. Caso queira remover um ou mais processos, clique em "Remover Processo (-)". Esse botão remove o último processo inserido, em sequência.
+
+# 7. Ao terminar de adicionar processos, clique em "Simular Escalonador" para ter a Tabela Final e o Diagrama de Gantt.
+
+# 8. Observação: o "Quantum" e a "Sobrecarga de Contexto" são fixos e definidos a partir dos valores presentes no último processo inserido.
 ```
 
 ---
