@@ -4,32 +4,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Original</title>
-  <link rel="stylesheet" href="/style.css">
 
+  <title>MLF</title>
+
+  <script>
+    const savedTheme = sessionStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  </script>
+
+  <link rel="stylesheet" href="/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
     rel="stylesheet">
 
+  <script defer src="../scripts/ui.js" type="module"></script>
   <script defer src="https://code.highcharts.com/gantt/highcharts-gantt.js" type="module"></script>
   <script defer src="../scripts/main.js" type="module"></script>
 </head>
 
 <body>
   <header>
-    <a href="../index.html">Escalonadores</a>
+    <button class="header-btn btn-about">
+      <svg style="grid-area: sobre;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <title>Sobre o Projeto</title>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 16v-4" />
+        <path d="M12 8h.01" />
+      </svg>
+    </button>
+    <a href="../index.html">SchedLab</a>
+    <button class="header-btn btn-moon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <title>Tema Escuro</title>
+        <path
+          d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+      </svg>
+    </button>
+    <button class="header-btn btn-sun">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <title>Tema Claro</title>
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
+      </svg>
+    </button>
   </header>
   <main class="escalonador">
     <div class="conteudo explicacao">
-      <h3>Escalonador Original</h3>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem aperiam iusto non illum laboriosam voluptatum
-        magni iste sapiente laborum vel delectus odit veritatis, hic eaque at optio dignissimos cupiditate dolorem?
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Exercitationem delectus voluptas iusto minima quia
-        sunt ullam reprehenderit nisi aperiam perspiciatis est reiciendis neque necessitatibus nobis accusamus, tempora
-        animi corrupti tempore. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum, quas provident.
-        Reiciendis possimus blanditiis debitis, praesentium vitae provident. Dicta, veritatis! Consectetur totam, ab
-        impedit quidem vel quas laborum atque vero!</p>
+      <h3>MLF - Most Laxity First</h3>
+      <p>O Most Laxity First ("maior folga primeiro") é um algoritmo original de escalonamento dinâmico, desenvolvido para atender aos
+        requisitos estabelecidos para este projeto. <strong> O sistema gerencia processos com
+        restrições de tempo através do cálculo de folga, que é recalculado sempre que um novo processo chega ao
+        escalonador. </strong> A prioridade de execução é concedida aos processos que apresentam a maior margem de tempo antes de
+        atingirem o seu prazo limite (deadline). Caso um processo ultrapasse essa janela temporal e fique vencido, ele
+        perde a prioridade do cálculo de folga e é movido para uma fila de atrasados exclusiva, onde passa a ser
+        processado de forma sequencial, respeitando estritamente a ordem cronológica de chegada.</p>
     </div>
     <div class="conteudo config">
       <h3 style="grid-area: row-1;">Configuração do Escalonador</h3>
@@ -40,6 +79,9 @@
         <label for="tempoExecucao">Tempo de Execução:</label>
         <input type="number" name="tempoExecucao" class="num-input" id="tempoExecucao" min="1" step="1"
           oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
+        <label for="deadline">Deadline:</label>
+        <input type="number" name="deadline" class="num-input" id="deadline" min="1" step="1"
+          oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior que 0." />
         <label for="quantum">Quantum:</label>
         <input type="number" name="quantum" class="num-input" id="quantum" min="2" step="1"
           oninput="validity.valid || (value = '')" placeholder="Digite um inteiro maior ou igual 2." />
@@ -49,7 +91,7 @@
         <button class="btn btn-adicionar" data-algoritmo="robin">Adicionar Processo (+)</button>
         <button class="btn btn-remover">Remover Processo (-)</button>
       </div>
-      <button style="grid-area: row-3;" class="btn btn-simular" data-algoritmo="proprio">Simular Escalonador</button>
+      <button title="Adicione pelo menos dois processos para simular." style="grid-area: row-3;" class="btn btn-simular btn-disable" data-algoritmo="mlf">Simular Escalonador</button>
     </div>
     <div class="conteudo tabela">
       <h3>Tabela de Agendamento</h3>
@@ -61,7 +103,7 @@
               <th>Tempo de Chegada</th>
               <th>Tempo de Execução</th>
               <th>Deadline</th>
-              <th>Prioridade</th>
+              <th class="disable">Prioridade</th>
               <th>Término</th>
               <th>Tempo de Espera</th>
               <th>Turnaround</th>
