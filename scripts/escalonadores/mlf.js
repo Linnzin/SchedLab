@@ -24,16 +24,37 @@ function delayedBlocks(ganttCoordenadas, arrayProcesses) {
   })
 }
 
-// função: gera os blocos amarelos do diagrama de gantt
+// // função: gera os blocos amarelos do diagrama de gantt
 function waitingBlocks(ganttCoordenadas, arrayProcesses) {
   let pidSet = new Set(arrayProcesses.map(proc => proc[0]));
+
   [...pidSet].forEach(pid => {
-    const startExec = ganttCoordenadas
-      .filter(block => block[0] === pid)
-      .reduce((min, block) => block[1] < min ? block[1] : min, Infinity);
     let process = arrayProcesses.find(proc => proc[0] === pid);
-    ganttCoordenadas.push([pid, process[1], startExec, true, false, false]); // gantt: tempo de espera
-  })
+    let arrivalTime = process[1];
+
+    // todos os blocos do processo que representam ocupação na CPU
+    let activeBlocks = ganttCoordenadas
+      .filter(block => block[0] === pid && !block[3] && !block[5])
+      .sort((a, b) => a[1] - b[1]); // Ordena do começo ao fim
+
+    if (activeBlocks.length === 0) return;
+
+    // chegada até o primeiro uso da CPU
+    let execTime = activeBlocks[0][1];
+    if (arrivalTime < execTime) {
+      ganttCoordenadas.push([pid, arrivalTime, execTime, true, false, false]); // gantt: espera inicial
+    }
+
+    // preenche os buracos entre as preempções
+    for (let i = 0; i < activeBlocks.length - 1; i++) {
+      let blockEnd = activeBlocks[i][2];
+      let nextBlockStart = activeBlocks[i + 1][1];
+
+      if (blockEnd < nextBlockStart) {
+        ganttCoordenadas.push([pid, blockEnd, nextBlockStart, true, false, false]);
+      }
+    }
+  });
 }
 
 // processArray -> [[pid 0, tempoDeChegada 1, duração 2, prioridade 3, deadline 4, quantum 5, sobrecarga 6]]
