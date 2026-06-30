@@ -44,20 +44,20 @@
       </svg>
     </button>
     <button class="header-btn btn-sun">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <title>Tema Claro</title>
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2" />
-      <path d="M12 20v2" />
-      <path d="m4.93 4.93 1.41 1.41" />
-      <path d="m17.66 17.66 1.41 1.41" />
-      <path d="M2 12h2" />
-      <path d="M20 12h2" />
-      <path d="m6.34 17.66-1.41 1.41" />
-      <path d="m19.07 4.93-1.41 1.41" />
-    </svg>
-  </button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <title>Tema Claro</title>
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
+      </svg>
+    </button>
   </header>
   <main class="escalonador">
     <div class="conteudo explicacao">
@@ -92,7 +92,8 @@
         </button>
         <button class="btn btn-remover">Remover Processo (-)</button>
       </div>
-      <button style="grid-area: row-3;" class="btn btn-simular" data-algoritmo="sjf">Simular Escalonador</button>
+      <button title="Adicione pelo menos dois processos para simular." style="grid-area: row-3;" class="btn btn-simular btn-disable"
+        data-algoritmo="sjf">Simular Escalonador</button>
     </div>
     <div class="conteudo tabela">
       <h3>Tabela de Agendamento</h3>
@@ -169,7 +170,7 @@
       <div id="gantt-chart"></div>
     </div>
   </main>
-    <footer>
+  <footer>
     <div class="footer-column">
       <h2>
         <svg style="grid-area: sobre;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

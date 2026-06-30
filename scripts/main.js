@@ -43,6 +43,8 @@ const btnRemoveRow = document.querySelector('.btn-remover');
 const btnSimulate = document.querySelector('.btn-simular');
 const processTable = document.querySelector('.tabela-agendamento__corpo');
 const divGantt = document.querySelector('.gantt');
+const inputArrival = document.getElementById("tempoChegada");
+const inputExec = document.getElementById("tempoExecucao");
 
 //================ Funções utilitárias ================ 
 // função: calcula as informações para o resumo qunatitativo
@@ -88,40 +90,26 @@ function htmlTableRows(pid, chegada, execucao, deadline, prioridade, termino, es
           </tr>`
 };
 
-// função: validar as entradas do usuário
-function schedulerValidation(scheduler) {
-  switch (scheduler) {
+// função: valida as configurações do processo 
+function schedulerValidation() {
+  const currentScheduler = btnAddRow.dataset.algoritmo 
+  if (!configuracaoEscalonador.tempoChegada && configuracaoEscalonador.tempoChegada !== 0 || !configuracaoEscalonador.tempoExecucao) {
+    return false;
+  }
+  switch (currentScheduler) {
     case "robin":
-      if (configuracaoEscalonador.quantum === null || configuracaoEscalonador.quantum <= 0) {
-        window.alert("Erro: O algoritmo Round Robin exige um valor válido para o Quantum!");
-        return;
-      }
+      if (!configuracaoEscalonador.quantum || configuracaoEscalonador.quantum <= 0) { return false; }
       break;
     case "prioridade":
-      if (configuracaoEscalonador.prioridade === null) {
-        alert("Erro: Informe a Prioridade para adicionar o processo.");
-        return;
-      }
+      if (!configuracaoEscalonador.prioridade) { return false; }
       break;
     case "edf":
-      if (configuracaoEscalonador.deadline === null) {
-        alert("Erro: O algoritmo EDF exige que o Deadline seja informado!");
-        return;
-      }
-      if (configuracaoEscalonador.quantum === null || configuracaoEscalonador.quantum <= 0) {
-        window.alert("Erro: O algoritmo EDF exige um valor válido para o Quantum!");
-        return;
-      }
+      if (!configuracaoEscalonador.deadline) { return false; }
+      if (!configuracaoEscalonador.quantum || configuracaoEscalonador.quantum <= 0) { return false; }
       break;
-    case "sjf":
-      break;
-    case "fcfs":
-      break;
-    default:
-      console.error("Algoritmo desconhecido selecionado.");
-      return;
   }
-};
+  return true
+}
 
 // função: executa o escalonador
 function execScheduler(scheduler, processes) {
@@ -354,30 +342,32 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
   });
 }
 
+// // função: ativa/desativa o botão de adicionar processo (WIP)
+// function toggleAddRowBtn() {
+//   const arrivalValue = Number(inputArrival.value);
+//   const execValue = Number(inputExec.value);
+
+//   if (arrivalValue >= 0 && execValue >= 1) {
+//     btnAddRow.classList.remove("btn-disable");
+//   } else {
+//     btnAddRow.classList.add("btn-disable");
+//   }
+// }
+
 //================ Event Listeners ================ 
 let processArray = [];
 
 // evento: remove linha da tabela
 btnRemoveRow.addEventListener('click', function () {
-  // trocar isso por uma indicação visual via css
-  // if (processTable.childElementCount === 0) {
-  //   window.alert("Não há processos para remover!")
-  //   return
-  // }
   processTable.lastElementChild?.remove();
   processArray.pop();
 })
 
 // evento: adiciona linha na tabela
 btnAddRow.addEventListener('click', function (e) {
-  if (configuracaoEscalonador.tempoChegada === null || configuracaoEscalonador.tempoExecucao === null) {
-    window.alert("Erro: O Tempo de Chegada e o Tempo de Execução são obrigatórios!")
-    return
-  }
-
-  schedulerValidation(e.target.dataset.algoritmo);
+  if (!(schedulerValidation())) { return }
+  
   let pid = processArray.length + 1;
-
   processArray.push([pid,
     configuracaoEscalonador.tempoChegada,
     configuracaoEscalonador.tempoExecucao,
@@ -396,12 +386,13 @@ btnAddRow.addEventListener('click', function (e) {
   processTable.insertAdjacentHTML('beforeend', processoStart);
 })
 
+// // evento: input de processos: tempo de chega e duração (WIP)
+// inputArrival.addEventListener("input", toggleAddRowBtn);
+// inputExec.addEventListener("input", toggleAddRowBtn);
+
 // evento: simula escalonador 
 btnSimulate.addEventListener('click', function (e) {
-  if (processArray.length === 0) {
-    alert("Adicione pelo menos um processo para simular!"); // to do: trocar essa guard clause por uma indicação visaul via css e bloquear o botao
-    return;
-  }
+  if (processArray.length === 0) { return }
   const resultadoSimulacao = execScheduler(schedulers[e.target.dataset.algoritmo], processArray);
 
   let resultadoTabela = resultadoSimulacao.tabelaFinal;
@@ -417,3 +408,21 @@ btnSimulate.addEventListener('click', function (e) {
     block: 'center'
   });
 });
+
+// monitor: monitora a quantidade de processos na lista
+const rowMonitor = new MutationObserver((mutationsList) => {
+  let rows = processTable.querySelectorAll('tr').length;
+  // toggle do botão de simular
+  if (rows >= 1) {
+    btnSimulate.classList.remove("btn-disable")
+  } else {
+    btnSimulate.classList.add("btn-disable")
+  }
+  // toggle do botão de remover processo
+  if (rows > 0) {
+    btnRemoveRow.classList.remove("btn-disable")
+  } else {
+    btnRemoveRow.classList.add("btn-disable")
+  }
+});
+rowMonitor.observe(processTable, { childList: true });

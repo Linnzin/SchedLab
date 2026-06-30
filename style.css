@@ -58,6 +58,7 @@ body {
 /* ===== HEADER ===== */
 
 header {
+  width: 100%;
   display: flex;
   position: sticky;
   z-index: 100;
@@ -245,6 +246,17 @@ main.escalonador {
   transform: scale(1.05);
 }
 
+.btn-disable{
+  cursor: not-allowed;
+  border: 2px solid hsla(from var(--cor-texto-main) h s l / 0.1);
+  color: hsla(from var(--cor-texto-main) h s l / 0.1);
+}
+.btn-disable:hover{
+  background-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
 .tabela {
   display: grid;
   grid-template-rows: auto auto;
@@ -322,6 +334,7 @@ table {
 /* ===== FOOTER ===== */
 
 footer {
+  width: 100%;
   color: var(--cor-texto-header);
   background-image: linear-gradient(var(--cor-base-header), hsl(from var(--cor-base-header) h s calc(l - 40)));
   display: grid;
