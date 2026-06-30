@@ -54,7 +54,7 @@ cd escalonadores_so
 
 ## Visualização da Interface
 
-![Gráfico de Gantt e Tabela de Métricas] ![exemplo-grafico](print_grafico.png)
+![Gráfico de Gantt e Tabela de Métricas] ![exemplo-grafico](./img/print_grafico.png)
 
 ---
 
