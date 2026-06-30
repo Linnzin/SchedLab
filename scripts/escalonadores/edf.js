@@ -70,7 +70,7 @@ export function edf(arrayProcessos) {
     if (filaProntos.length === 0) {
       let proximoProcesso = processosNaoChegados[0];
       if (!proximoProcesso) break; // segurança
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada, false, false, false]);
+      // ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada, false, false, false]);
       tempoAtual = proximoProcesso.chegada;
       ultimoPid = null;
       ultimoPreemptado = false;

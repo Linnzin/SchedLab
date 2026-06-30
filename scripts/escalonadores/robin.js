@@ -64,7 +64,7 @@ export function robin(arrayProcessos) {
       }
       let proximoProcesso = processosNaoChegados[0];
       if (!proximoProcesso) break;
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada, false, false, false]);
+      // ganttCoordenadas.push(["Ocioso", tempoAtual, proximoProcesso.chegada, false, false, false]);
       tempoAtual = proximoProcesso.chegada;
       ultimoPid = null;
       ultimoPreemptado = false;

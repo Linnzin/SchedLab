@@ -5,7 +5,8 @@ export function fcfs(processArray) {
   const orderedProcessArray = processArray.sort((a, b) => (a[1] ?? 0) - (b[1] ?? 0))
 
   // ====== ganttCoordenadas - blocos de execução ======
-  let ganttCoordenadas = []; //[[pid, inicio, fim]]
+  let ganttCoordenadas = []; // [[ID, INICIO_BLOCO, FIM_BLOCO, FLAG_ESPERA, FLAG_SOBRECARGA, FLAG_DEADLINE]]
+  
   for (let i = 0; i < orderedProcessArray.length; i++) {
     let processId = orderedProcessArray[i][0];
     let inicioProcesso = (i == 0) ? 0 : ganttCoordenadas[i - 1][2];

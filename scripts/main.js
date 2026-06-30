@@ -338,8 +338,9 @@ function ganttChart(ganttCoordenadas, scheduler, processArray) {
       followPointer: true,
       formatter: function () {
         return '<b>' + this.point.name + '</b><br/>' +
-          'Início: ' + this.point.start + '<br/>' +
-          'Fim: ' + this.point.end;
+          'Início do bloco: ' + this.point.start + '<br/>' +
+          'Fim do bloco: ' + this.point.end + '<br/>' +
+          'Tamanho do bloco: ' + (this.point.end - this.point.start);
       },
       backgroundColor: 'var(--cor-base-main)',
       style: {

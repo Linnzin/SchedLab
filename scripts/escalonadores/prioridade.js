@@ -25,7 +25,7 @@ export function prioridade(arrayProcessos) {
 
     if (disponiveis.length === 0) {
       let proximaChegada = Math.min(...processosRestantes.map(p => p.chegada));
-      ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false, false]);
+      // ganttCoordenadas.push(["Ocioso", tempoAtual, proximaChegada, false, false, false]);
       tempoAtual = proximaChegada;
       continue;
     }
