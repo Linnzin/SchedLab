@@ -12,7 +12,7 @@ Este projeto foi desenvolvido como parte dos requisitos práticos da disciplina 
 
 ## Utilização
 
-💻 **[Acesse o SchedLab](URL_DO_GITHUB_PAGES_OU_DEPLOY)**
+💻 **[Acesse o SchedLab](https://linnzin.github.io/SchedLab/)**
 
 ---
 ## Como Executar o Projeto Localmente
@@ -21,10 +21,10 @@ Como a aplicação foi desenvolvida puramente em ambiente web, executá-la é ex
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/Linnzin/escalonadores_so.git
+git clone https://github.com/Linnzin/SchedLab.git
 
 # 2. Acesse o diretório do projeto
-cd escalonadores_so
+cd SchedLab
 
 # 3. Abra o index.html através de um servidor de desenvolvimento local (recomendação: Live Server para VSCode)
 ```
